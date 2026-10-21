@@ -1,5 +1,26 @@
 /* Bounded ZIP inspection. Only local illustrated-slide projects are editable here. */
 import { validateCredit } from "./rebost.js";
+
+function validateSVG(svg) {
+  if (!svg) return;
+  if (/<script|<foreignObject|\bon\w+\s*=|javascript:/i.test(svg))
+    throw new Error("invalid");
+  const doc = new DOMParser().parseFromString(svg, "image/svg+xml");
+  if (doc.querySelector("parsererror")) throw new Error("invalid");
+  // Credits can contain website addresses as ordinary text. Inspect resource
+  // attributes and CSS instead of rejecting those attribution text nodes.
+  for (const node of doc.querySelectorAll("*")) {
+    for (const attribute of node.attributes) {
+      const namespace = attribute.name === "xmlns" ||
+        attribute.namespaceURI === "http://www.w3.org/2000/xmlns/";
+      if (!namespace && /https?:\/\//i.test(attribute.value))
+        throw new Error("invalid");
+    }
+    if (node.localName.toLowerCase() === "style" && /https?:\/\//i.test(node.textContent))
+      throw new Error("invalid");
+  }
+}
+
 export async function inspectBook(bytes) {
   if (bytes.byteLength > 25 * 1024 * 1024) throw new Error("invalid");
   // Check central-directory sizes before inflating; reject ZIP64 and symlinks.
@@ -171,12 +192,7 @@ export async function inspectBook(bytes) {
       }
     };
     walk(data.fabric);
-    if (
-      /<script|<foreignObject|\bon\w+\s*=|javascript:|https?:\/\/(?!www\.w3\.org\/)/i.test(
-        data.svg || "",
-      )
-    )
-      throw new Error("invalid");
+    validateSVG(data.svg || "");
   }
   for (const html of tags("htmlView"))
     if (

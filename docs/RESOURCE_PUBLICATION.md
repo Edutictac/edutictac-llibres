@@ -114,3 +114,64 @@ Se corrigió también el valor por defecto del wrapper local de `roles` a `group
 coherente con el proveedor Authentik y `.env.example`. Se respetan los valores
 configurados explícitamente. Las sesiones anteriores conservan su rol firmado:
 entrar de nuevo desde el botón obtiene una sesión con los permisos correctos.
+
+## Alumnado y aprobación docente
+
+El alumnado entra desde Publicar con su **código y PIN del aula de Commons** y
+pulsa **Enviar a mi docente**. Se guarda una copia privada e inmutable de esa
+revisión; el borrador del navegador sigue siendo editable. El estado y el comentario
+docente se consultan con **Actualizar estado**. No aparece una ficha pública hasta
+que un responsable del aula aprueba esa revisión concreta.
+
+El docente entra con su sesión individual de Commons y abre **Revisar libros ·
+Docentes** desde la portada. Ve las solicitudes de sus aulas, lee la copia privada
+y puede aprobarla o devolverla con un comentario obligatorio. Para aprobar debe
+marcar que ha revisado imágenes, autoría y licencia. «Mostrar también los revisados»
+permite consultar decisiones anteriores y retirar publicaciones aprobadas.
+
+Los cambios posteriores generan otra revisión. La versión aprobada anterior sigue
+publicada hasta una nueva aprobación. **Cancelar envío** elimina solo la copia de
+revisión; **Retirar publicación** elimina también la versión pública. El borrador
+local se conserva en ambos casos. Las revisiones caducadas por cambios simultáneos
+se rechazan con conflicto: actualizar la bandeja y volver a leer antes de decidir.
+
+### Permisos y límites
+
+- Se reutilizan `student_identities.group_id`, `groups.created_by_teacher_id` y
+  `group_memberships`. No se elige un docente arbitrario ni se deduce un aula por
+  nombres o grupos de un proveedor externo. Un docente puede revisar sus aulas y
+  las de las que sea miembro; un administrador puede gestionar también solicitudes
+  de aulas retiradas para limpiar copias pendientes.
+- El permiso de aula se comprueba en cada consulta de archivos y decisión. La
+  aprobación comprueba además que la identidad del alumno siga activa y vinculada
+  a esa aula. Un alumno revocado, eliminado o trasladado no puede obtener una nueva
+  aprobación en su aula anterior; el responsable anterior puede retirar la copia.
+- Una cuenta OIDC con rol alumno todavía no tiene vínculo verificado con un aula
+  de Commons. Para esta primera versión debe usar el código/PIN del aula. No se
+  conceden permisos docentes ni se crean cuentas automáticamente.
+- Las solicitudes y archivos privados usan dos tablas adicionales en la misma
+  SQLite: `llibres_submissions` y `llibres_review_files`. Se validan con el mismo
+  compilador de SVG/PNG del lector público. Aprobar copia la versión revisada al
+  índice y archivos públicos y registra la decisión en una transacción. Se elimina
+  la copia privada redundante al aprobar; ante un error se revierte todo.
+- La cuota global de 2 GiB y la individual de 200 MiB cuentan copias públicas y
+  privadas. Máximo 50 solicitudes activas por alumno. La bandeja pagina de 24 en 24.
+  Cancelar o retirar libera los archivos; devolver conserva la copia para revisarla.
+- La vista previa privada exige sesión docente y usa `private, no-store`, sin
+  scripts ni formularios. Su sandbox permite el mismo origen para que las imágenes
+  privadas reciban la sesión; sigue prohibiendo scripts. Las imágenes no obtienen
+  enlaces públicos durante la revisión.
+- No hay limpieza automática por antigüedad. Los responsables pueden retirar
+  copias y los administradores pueden limpiar solicitudes de aulas borradas. Las
+  copias de seguridad conservan su política de retención independiente.
+
+Rutas del adaptador: `/api/llibres/submissions/{draft}`, `/api/llibres/reviews` y
+`/api/llibres/reviews/{id}` con sus archivos privados. Las rutas internas del banco
+exigen el token entre servidores; los identificadores de alumno, aula y responsable
+se verifican en Commons y nunca se toman de cabeceras suministradas por el navegador.
+
+La estantería de borradores sigue siendo local al navegador, compartida por sus
+sesiones de uso; no se ha convertido en un almacenamiento privado por cuenta.
+El aislamiento por alumno/aula se aplica a las copias enviadas al servidor.
+Se conserva quién aprobó y cuándo la última versión pública, aunque se envíen
+otras revisiones o comentarios después; esos datos no forman parte del catálogo público.

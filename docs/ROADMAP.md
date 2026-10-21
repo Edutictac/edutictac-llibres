@@ -13,22 +13,29 @@ Petición expresa del usuario, 21-10-2026. **Implementado como conexión opciona
 - [x] Revisar portada, título, autoría o pseudónimo y licencia antes de publicar.
 - [x] Comprobar alojamiento persistente, aislamiento del visor y permisos del publicador.
 
-El prototipo sigue pudiendo utilizarse por separado. La arquitectura y los límites
+Llibres sigue pudiendo utilizarse por separado. La arquitectura y los límites
 implementados están en [RESOURCE_PUBLICATION.md](RESOURCE_PUBLICATION.md).
 
 ## Siguientes mejoras
 
+- [x] Completar la interfaz Vue: creación, taller, lector, Rebost, historias
+  compartidas, publicación, revisión y estantería. Arquitectura y reproducción
+  en [VUE_PILOT.md](VUE_PILOT.md).
 - Evaluar la experiencia con libros reales y acceso docente OIDC.
 - Narraciones y audio (fuera de esta primera publicación).
 - Moderación y política editorial del banco antes de abrir publicaciones en Internet.
 
 ## Publicación del alumnado con aprobación docente
 
-Petición expresa del usuario, 21-10-2026. Pendiente de implementar.
+Petición expresa del usuario, 21-10-2026. Implementado como conexión opcional.
 
-- [ ] Permitir al alumnado enviar un libro a revisión sin hacerlo público.
-- [ ] Mostrar al tutor o docente responsable las solicitudes de su alumnado.
-- [ ] Aprobar o devolver el libro para corregirlo antes de su publicación.
-- [ ] Publicar únicamente la versión aprobada; nuevas modificaciones requieren
+- [x] Permitir al alumnado enviar un libro a revisión sin hacerlo público.
+- [x] Mostrar al tutor o docente responsable las solicitudes de su alumnado.
+- [x] Aprobar o devolver el libro para corregirlo antes de su publicación.
+- [x] Publicar únicamente la versión aprobada; nuevas modificaciones requieren
       una nueva aprobación.
-- [ ] Mantener el aislamiento por aula y los borradores privados.
+- [x] Mantener el aislamiento por aula de los envíos y conservar los borradores en el navegador.
+
+Pendiente de una integración posterior: vincular alumnos de Authentik con aulas
+de Commons. Esta primera revisión utiliza las credenciales de código y PIN que
+ya tienen un aula y responsables verificados.

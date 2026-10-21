@@ -65,19 +65,20 @@ def test_real_anonymous_catalogue_can_insert_an_image_without_login(browser):
 
 
 @pytest.mark.parametrize('destination', ['/llibres-login.html?lang=va', '/assets/'])
-def test_login_proxy_preserves_requested_destination(destination):
+@pytest.mark.parametrize('endpoint', ['/api/auth/oidc/login', '/student.html'])
+def test_login_proxy_preserves_requested_destination(destination, endpoint):
     from urllib.request import build_opener, HTTPRedirectHandler
     from urllib.parse import urlsplit, parse_qs, quote
     enabled()
     class NoRedirect(HTTPRedirectHandler):
         def redirect_request(self, *args): return None
     try:
-        build_opener(NoRedirect).open(BASE+'/api/auth/oidc/login?next='+quote(destination, safe=''))
+        build_opener(NoRedirect).open(BASE+endpoint+'?next='+quote(destination, safe=''))
     except HTTPError as response:
         assert response.code == 302
         target = urlsplit(response.headers['Location'])
         assert target.port == 8082
-        assert target.path == '/api/auth/oidc/login'
+        assert target.path == endpoint
         assert parse_qs(target.query)['next'] == [destination]
     else:
         pytest.fail('Expected login to redirect to Commons')

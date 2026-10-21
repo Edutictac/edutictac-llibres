@@ -1,10 +1,10 @@
-# EduTicTac Llibres — primera prueba independiente
+# EduTicTac Llibres
 
-Taller de libros ilustrados para valorar eXeLearning antes de integrarlo en Commons.
+Taller de libros ilustrados con eXeLearning e integración opcional con Commons.
 Funciona sin Commons ni cuentas. Ofrece una conexión **opcional de lectura** a
 Rebost y una conexión opcional de publicación al banco común. No usa servicios de IA ni modifica los archivos de eXeLearning.
 
-## Probar
+## Iniciar
 
 ```sh
 python3 scripts/bootstrap.py
@@ -34,9 +34,9 @@ No hay sincronización ni guardado automático durante la escritura.
 - Guardar/reabrir, descargar fuente `.elpx`, lectura de páginas, HTML y EPUB.
 - Interfaz propia en castellano y valenciano. Algunas herramientas del lienzo
   upstream mantienen etiquetas inglesas.
-- El importador de esta prueba acepta solo proyectos de páginas `slide`, con
+- El importador de Llibres acepta solo proyectos de páginas `slide`, con
   límites y comprobaciones de estructura. No pretende abrir cualquier curso eXe.
-- Primera evaluación en ordenador. iPad, narraciones, IA, colaboración,
+- Interfaz orientada a ordenador. iPad, narraciones, IA, colaboración,
   cuentas propias quedan fuera. Publicación disponible mediante conexión opcional.
 
 ## Conexión opcional al Rebost local
@@ -106,8 +106,16 @@ upstream y enlaces de acceso; esta conexión no descubre servidores externos.
 
 ## Arquitectura y límites
 
+Toda la interfaz interactiva propia utiliza Vue: portada y estantería, creación,
+controles de páginas y herramientas, lector, selector de Rebost, historias
+compartidas, publicación y revisión docente. `src/App.vue` monta una sola
+aplicación; `src/workshop.js` coordina el motor y conserva los binarios fuera del
+estado reactivo. Un único bundle compilado se sirve localmente.
+No requiere Node en Docker ni cambia el almacenamiento de libros. Código,
+compilación y licencias en [docs/VUE_PILOT.md](docs/VUE_PILOT.md).
+
 eXeLearning **4.0.5 estático**, release oficial con SHA-256 en `upstream.json`,
-servido sin cambios desde `vendor/` (no versionado). UI propia en `public/`,
+servido sin cambios desde `vendor/` (no versionado). UI propia en `src/`, compilada a `public/ui.js`,
 cliente IndexedDB y un adaptador acotado `adapter.js`. Un nginx independiente
 sirve todo bajo el mismo origen. Sin backend de aplicación ni base de datos.
 
@@ -156,7 +164,7 @@ dependencias, esas pruebas opcionales se omiten.
 
 ## Licencias y código fuente
 
-Código propio de este prototipo: AGPL-3.0-or-later. Texto completo en `LICENSE`.
+Código propio de Llibres: AGPL-3.0-or-later. Texto completo en `LICENSE`.
 eXeLearning: AGPL-3.0-or-later. Su iDevice `slide` declara CC BY-SA 4.0;
 no se ha copiado su implementación al código propio, se utiliza la distribución
 original. Fabric.js es MIT, DOMPurify tiene licencia MPL-2.0 o Apache-2.0 y
@@ -165,8 +173,8 @@ fflate MIT. Se conservan sus avisos en la distribución oficial.
 Fuentes exactas del motor:
 https://github.com/exelearning/exelearning/tree/63748a3d87c8c3a757ef5f3479945db871ddb4c2
 
-El código de esta prueba y las instrucciones de reproducción se descargan desde
-«Sobre esta prueba y licencias». No incluye libros, datos del navegador ni secretos.
+El código de Llibres y las instrucciones de reproducción se descargan desde
+«Sobre Llibres y licencias». No incluye libros, datos del navegador ni secretos.
 
 La conexión opcional al banco permite **Publicar**, actualizar y retirar libros,
 y leerlos en **Històries compartides**, sin duplicar el catálogo del banco.
@@ -180,3 +188,13 @@ docker compose -f compose.yml -f compose.rebost.yml -f compose.publication.yml u
 Arquitectura, permisos, persistencia y límites en
 [docs/RESOURCE_PUBLICATION.md](docs/RESOURCE_PUBLICATION.md).
 Estado y mejoras pendientes en el [roadmap](docs/ROADMAP.md).
+
+
+## Enviar libros del alumnado a revisión
+
+Con la conexión opcional de publicación activada, el alumnado entra con su código
+y PIN del aula y elige **Enviar a mi docente**. El envío permanece privado.
+El docente abre **Revisar libros · Docentes** para leer, devolver con comentario
+o aprobar la publicación. Cambios posteriores requieren otra aprobación.
+Los alumnos OIDC aún deben usar el código/PIN para vincularse al aula.
+Detalles de permisos y conservación en [RESOURCE_PUBLICATION.md](docs/RESOURCE_PUBLICATION.md).

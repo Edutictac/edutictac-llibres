@@ -213,3 +213,130 @@ del área visible, actualización con mensaje propio. Dos recorridos aprobados e
 licencias»; se conserva el editable .elpx. Pruebas API: 20 aprobadas, 1,90 s,
 incluida adaptación de lectores publicados anteriormente sin alterar revisiones
 ni el contenido del libro. No hay que volver a publicar para ocultar ese enlace.
+
+
+## Envío del alumnado y revisión docente
+
+21-10-2026. Implementado y activado en local como conexión opcional.
+
+- Suite completa de Llibres: **37 aprobadas**, 221,57 s; incluye regresiones del
+  editor, créditos, selector y publicación docente, más revisión del alumnado.
+- API del banco: **76 aprobadas**, 3,44 s: copia privada, aislamiento por aula,
+  aprobación exacta, revisión obsoleta rechazada, devolución con comentario, nueva
+  versión pendiente que conserva la pública anterior, cancelación, retirada,
+  cuotas transaccionales, JSON incorrecto y limpieza administrativa de huérfanos.
+- Commons: **17 aprobadas**, 28,41 s, de identidad, revocación, roles, wrappers y
+  permisos. El navegador no puede elegir ni suplantar propietario, aula o ámbito
+  administrativo. Alumnado y docentes ajenos no pueden aprobar ni leer archivos
+  privados. Un alumno desactivado no recibe una aprobación posterior.
+- Prueba completa es/va mediante HTTP real contra un Commons temporal, con sesión
+  de código/PIN y cookie docente sintética en navegadores separados. El transporte
+  al banco utiliza su aplicación real y una SQLite temporal. No se usan cuentas ni
+  libros personales. Se verifica que una imagen privada del iframe carga con la
+  sesión docente real de esa prueba y permanece protegida sin sesión.
+- Recorrido valenciano repetido tras los ajustes de interfaz: **1 aprobada**,
+  15,80 s. Capturas sintéticas `review-pupil-va.png` y
+  `review-teacher-preview-va.png` revisadas visualmente.
+- Proxy nginx real: **9 aprobadas**, 8,45 s; conserva los destinos de Llibres y
+  Rebost tanto para acceso docente como para código/PIN, además de la privacidad
+  y el catálogo sin cuenta.
+- Bases locales íntegras; fuentes del servidor activo coinciden con ambos módulos
+  de publicación y revisión. API de revisión y solicitudes anónimas denegadas.
+
+Se conservan los borradores y los libros publicados. Aulas y relaciones docentes
+no se crean automáticamente. Las cuentas OIDC de alumno requieren un vínculo
+posterior con el aula: esta primera versión utiliza código/PIN. La prueba manual
+con una pareja de cuentas reales del aula queda pendiente del usuario.
+
+Comprobaciones adicionales: una cookie docente de compatibilidad antigua no
+sustituye al revisor individual; la consulta de aulas usa su identidad OIDC.
+Los permisos generales de itinerarios conservan su comportamiento (prueba
+focalizada aprobada). Los datos de última aprobación se conservan al cancelar o
+enviar nuevas revisiones.
+
+## Piloto Vue: bandeja de revisión docente (21-10-2026)
+
+- Suite completa de Llibres: **44 aprobadas**, 225,99 s. Incluye editor,
+  almacenamiento, importación/exportación, créditos, Rebost, proxy nginx,
+  publicación y revisión docente en castellano y valenciano. Las advertencias
+  son de dependencias Python existentes (Authlib/websockets).
+- Cinco regresiones nuevas de interfaz: paginación/filtro, traducción reactiva
+  y textos inertes; vuelta del acceso y revocación; conflicto de revisión sin
+  anunciar éxito ni perder comentario; respuesta tardía tras Escape; IDs de
+  recursos inválidos descartados. Ejecución focalizada: **5 aprobadas**, 5,08 s.
+- Recorrido HTTP con aula, alumno y docente sintéticos, banco real con SQLite
+  temporal e imágenes privadas: **2 aprobadas**, 28,69 s, antes de la suite
+  completa. Se conserva confirmación explícita, sandbox sin scripts e If-Match.
+- `npm ci --ignore-scripts` y `npm run build`: compilación limpia reproducible
+  con el mismo SHA-256 del bundle antes/después de reinstalar dependencias.
+  Auditoría npm de esta instalación: cero vulnerabilidades informadas.
+- `public/reviews.js`: 89.300 bytes, runtime local de producción sin depender
+  de `process.env` en el navegador. No se instala Node en Docker ni se cambia
+  el puerto/origen de IndexedDB.
+- ZIP de fuentes comprobado: incluye componentes, manifiestos, lockfile,
+  configuración y licencia MIT. Captura sintética valenciana de aprobación
+  revisada visualmente.
+- HTTP 200 en la dirección Tailnet desde el propio host; archivos servidos
+  coinciden con los locales. No constituye otra comprobación desde un iPad o
+  dispositivo remoto. Prueba manual con cuentas reales pendiente del usuario.
+
+Alcance, reproducción y dependencias: [VUE_PILOT.md](VUE_PILOT.md).
+
+## Estantería Vue y reapertura del editable del banco (21-10-2026)
+
+- Retirados los avisos de «prueba/prova» de la interfaz, la página informativa
+  y los mensajes de compatibilidad. Se conserva la nota de almacenamiento local.
+- Estantería Vue: contador, orden por fecha, idioma, textos escapados, borrado
+  confirmado, recuperación tras fallo y devolución de foco. Pruebas focalizadas:
+  **4 aprobadas**, 21,83 s; incluyen abrir, editar, guardar y reabrir en es/va.
+- Regresión inicial del editor tras migrar la estantería: **12 aprobadas**,
+  40,09 s. Un único bundle `public/ui.js` comparte Vue entre revisión y estantería.
+- Incidencia real reproducida: el `.elpx` del banco era correcto, pero la URL
+  `http://scratch.mit.edu` dentro del texto de atribución del SVG de créditos
+  activaba el rechazo global de URLs. El importador ahora revisa atributos de
+  recursos y CSS, permitiendo las direcciones escritas como texto. Los scripts,
+  eventos y `foreignObject` continúan rechazados.
+- Nueva regresión sintética falla antes del arreglo y pasa después. Once casos
+  cubren texto con URL, referencias externas (incluido el dominio W3C fuera de
+  declaraciones de namespace), CSS, scripts, eventos y enlaces JavaScript.
+- La prueba de publicación ahora reabre en un navegador nuevo el `.elpx` exacto
+  entregado por la API del banco, incluyendo una atribución con URL.
+- El archivo real publicado también se ha descargado y abierto correctamente
+  en un navegador aislado: cuatro páginas y lector funcional. No se modificó
+  la publicación ni los libros del navegador del usuario.
+- Portada y página informativa revisadas; captura sintética
+  `artifacts/vue-shelf-va.png`. Archivos servidos coinciden con el workspace y
+  el ZIP de fuentes contiene componentes, bundle compartido y corrección del
+  importador. No se han cambiado API, Docker, puerto, motor ni esquema IndexedDB.
+
+Resultado final con ambos cambios: **59 pruebas aprobadas**, 256,99 s.
+Incluye los once casos SVG, reapertura desde el banco es/va, estantería Vue,
+revisión docente y regresiones del editor. Cuatro avisos de deprecación de las
+dependencias Python existentes; ningún fallo.
+
+## Interfaz completa en Vue (21-10-2026)
+
+- **64 pruebas aprobadas**, 277,76 s, con la interfaz completa. Cuatro avisos
+  de deprecación de Authlib/websockets ya existentes; ningún fallo.
+- Se conservan los recorridos de editor, guardado, importación/exportación,
+  créditos, Rebost, publicación y revisión en castellano y valenciano.
+- Nuevas pruebas: plantillas álbum/blanca, título vacío, controles de páginas,
+  renombrar y eliminar, estado de guardado, modo completo/sencillo, límites de
+  navegación, Escape y recuperación del dibujo tras cerrar el lector.
+- Catálogo público: búsqueda con reinicio de paginación, más resultados,
+  traducción, texto inerte, visor sin scripts y respuesta tardía tras cerrar.
+- Cerrar una publicación mientras carga el estado privado restaura el lienzo
+  al terminar. Se devuelve el foco desde el iframe de eXe al diálogo antes de
+  esperar la API, permitiendo Escape y navegación por teclado. Prueba aprobada.
+- Comprobación visual en navegador nuevo con datos sintéticos: creación, taller,
+  lector y vuelta a estantería en valenciano. Capturas
+  `vue-complete-create-va.png`, `vue-complete-workshop-va.png` y
+  `vue-complete-reader-va.png` en artifacts, sin versionar.
+- Un único punto de montaje Vue y bundle local de 131.937 bytes. No se añaden
+  dependencias ni servicios. eXe, su adaptador, las API, el esquema IndexedDB,
+  el origen del navegador y el formato `.elpx` conservan su implementación.
+- Archivos servidos por nginx comprobados contra los locales. No se ha realizado
+  otra comprobación desde un dispositivo remoto ni usado cuentas personales.
+
+Arquitectura y reproducción: [VUE_PILOT.md](VUE_PILOT.md). La comprobación manual
+con libros y cuentas reales corresponde al siguiente paso de aceptación.

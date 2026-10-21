@@ -67,12 +67,38 @@ def routes(context,bank,can_publish=True):
     return requests
 
 
+def test_escape_during_publication_loading_restores_editor(browser, bank):
+    context = browser.new_context(viewport={'width':1440,'height':1000})
+    routes(context, bank)
+    page = context.new_page(); create(page)
+    held = []
+    # Pause after the editor has saved/prepared its cover, while the private
+    # publication state is loading. Escape must restore the canvas afterwards.
+    context.route('**/api/llibres/mine/*', lambda route: held.append(route))
+    with page.expect_request('**/api/llibres/mine/*'): page.click('#publish-book')
+    expect(page.locator('#publish-dialog')).to_be_visible()
+    page.keyboard.press('Escape')
+    expect(page.locator('#publish-dialog')).to_be_hidden()
+    held.pop().fulfill(json={'published':False,'revision':0})
+    idle(page)
+    expect(page.locator('#publish-form')).to_be_hidden()
+    page.click('#draw'); idle(page)
+    frame = page.locator('#engine-host iframe').element_handle().content_frame()
+    assert frame.evaluate('__slideEditorCanvas.isDrawingMode')
+    page.click('#select'); idle(page)
+    page.fill('#book-title', 'El taller continua')
+    page.locator('#book-title').dispatch_event('change')
+    page.click('#back'); idle(page)
+    expect(page.locator('#books .book-open')).to_have_text('El taller continua')
+    context.close()
+
+
 @pytest.mark.parametrize('lang',['es','va'])
 def test_publish_read_update_bank_and_shared_withdraw_without_losing_draft(browser,bank,lang):
     module,client=bank
     context=browser.new_context(viewport={'width':1440,'height':720},accept_downloads=True)
     requests=routes(context,bank)
-    fixture_api(context)
+    fixture_api(context, author="Synthetic test author · See http://scratch.mit.edu")
     page=context.new_page();create(page,lang)
     page.click('#add-image');choose(page)
     page.click('#publish-book');idle(page)
@@ -101,6 +127,18 @@ def test_publish_read_update_bank_and_shared_withdraw_without_losing_draft(brows
     assert page.locator('#publication-link').get_attribute('href')==url
     assert client.get('/api/llibres/public/'+key+'/source.elpx').status_code==200
     assert len(client.get('/api/llibres/books').json()['items'])==1
+    # The bank's exact editable must reopen in a fresh browser, including the
+    # final credits slide whose attribution contains an ordinary website URL.
+    other = browser.new_context(viewport={'width':1440,'height':1000})
+    imported = other.new_page(); imported.goto(BASE)
+    source = client.get('/api/llibres/public/'+key+'/source.elpx').content
+    imported.set_input_files('#file-input', {'name':'llibre.elpx',
+        'mimeType':'application/octet-stream', 'buffer':source})
+    idle(imported)
+    expect(imported.locator('.page-tab')).to_have_count(4)
+    imported.click('#read'); idle(imported)
+    expect(imported.locator('#reader-page svg image')).to_have_count(1)
+    other.close()
     page.click('#close-publish');idle(page)
     page.click('#back');idle(page)
     expect(page.locator('.book-open:visible')).to_have_count(1)
