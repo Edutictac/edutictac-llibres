@@ -1,0 +1,5 @@
+# Requires compose.rebost.yml to reuse the existing Commons network and login.
+services:
+  llibres:
+    volumes:
+      - ./nginx.publication.conf:/etc/nginx/conf.d/rebost.locations-publication:ro

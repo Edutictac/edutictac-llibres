@@ -1,0 +1,46 @@
+/* Presentation only; eXeLearning core and original files are unchanged. */
+body.llibres-credits .exe-slide-tb,
+body.llibres-credits .exe-slide-code-toggle,
+body.llibres-credits .exe-slide-view-toggle {
+  display: none !important;
+}
+body.llibres-simple #workarea > .asideleft,
+body.llibres-simple #head,
+body.llibres-simple #header-node-content,
+body.llibres-simple #menu_idevices {
+  display: none !important;
+}
+body.llibres-simple #workarea {
+  padding: 0 !important;
+  background: #ebece6 !important;
+  height: 100vh !important;
+}
+body.llibres-simple #workarea > .asideright,
+body.llibres-simple #workarea > main {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 10px !important;
+  flex: 1 !important;
+}
+body.llibres-simple #node-content-container {
+  border: 0 !important;
+  margin: 0 !important;
+  padding: 10px !important;
+  background: #fff !important;
+}
+body.llibres-simple .exe-slide-code-toggle {
+  display: none !important;
+}
+body.llibres-simple #page-title-node-content,
+body.llibres-simple .exe-slide-view-toggle,
+body.llibres-simple .exe-slide-empty-hint {
+  display: none !important;
+}
+body.llibres-simple .exe-slide-editor__wrapper {
+  height: calc(100vh - 140px) !important;
+  min-height: 350px !important;
+}
+body.llibres-simple .exe-slide-canvas-shell {
+  min-height: 200px !important;
+}

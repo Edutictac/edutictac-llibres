@@ -1,0 +1,12 @@
+# Optional connection to the existing local Commons portal. No new service.
+services:
+  llibres:
+    networks:
+      - default
+      - commons
+    volumes:
+      - ./nginx.rebost.conf:/etc/nginx/conf.d/rebost.locations:ro
+networks:
+  commons:
+    external: true
+    name: edutictac-commons_default

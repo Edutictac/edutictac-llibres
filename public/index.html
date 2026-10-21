@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>EduTicTac Llibres</title>
+    <link rel="stylesheet" href="/app.css" />
+    <script src="/engine/libs/fflate/fflate.umd.js" defer></script>
+    <script src="/engine/libs/dompurify/purify.min.js" defer></script>
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <header class="masthead">
+      <a class="brand" href="/">◧ EduTicTac <b>Llibres</b></a
+      ><span class="preview-label" data-i18n="preview">Taller de prueba</span
+      ><select id="language" aria-label="Idioma">
+        <option value="es">Castellano</option>
+        <option value="va">Valencià</option>
+      </select>
+    </header>
+    <main id="home">
+      <section class="hero">
+        <div>
+          <p class="eyebrow" data-i18n="eyebrow">
+            IMAGINA · ESCRIBE · COMPARTE
+          </p>
+          <h1 data-i18n="headline">Tu próxima historia empieza aquí.</h1>
+          <p class="intro" data-i18n="intro">
+            Un pequeño taller para crear grandes libros. Elige una idea y dale
+            vida con tus palabras e imágenes.
+          </p>
+          <div class="actions">
+            <button id="new-book" class="primary" data-i18n="new">
+              ＋ Crear un libro</button
+            ><button id="open-book" data-i18n="open">
+              Abrir un archivo .elpx
+            </button>
+            <button id="open-shared" data-i18n="sharedStories" hidden>
+              Historias compartidas
+            </button>
+          </div>
+          <p class="storage-note" data-i18n="local">
+            Tus libros se guardan en este navegador. Descarga una copia para
+            conservarlos o llevarlos a otro dispositivo.
+          </p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="book-cover">
+            <span>EL MEU<br />MENUT<br />UNIVERS</span>
+            <div class="sun"></div>
+            <div class="hill"></div>
+            <i>una història per descobrir</i>
+          </div>
+          <span class="star">✳</span>
+        </div>
+      </section>
+      <section class="shelf">
+        <div class="section-heading">
+          <h2 data-i18n="myBooks">Mis libros</h2>
+          <span id="book-count"></span>
+        </div>
+        <div id="books" class="books"></div>
+      </section>
+      <footer>
+        <span data-i18n="footer">Hecho para imaginar, con software libre.</span
+        ><a href="/about.html" data-i18n="about"
+          >Sobre esta prueba y licencias</a
+        >
+      </footer>
+    </main>
+    <section id="workspace" hidden aria-label="Taller del libro">
+      <div class="book-toolbar">
+        <button id="back" data-i18n="back">← Mis libros</button
+        ><input
+          id="book-title"
+          maxlength="120"
+          aria-label="Título del libro"
+        /><span id="save-status" role="status"></span
+        ><button id="save-book" data-i18n="save">Guardar</button
+        ><button id="download" data-i18n="download">Descargar .elpx</button
+        ><button id="read" class="primary" data-i18n="read">▷ Leer</button>
+        <button id="publish-book" data-i18n="publishBook" hidden>
+          Publicar
+        </button>
+      </div>
+      <div class="workspace-body">
+        <aside class="pages-panel">
+          <div class="section-heading">
+            <h2 data-i18n="pages">Páginas</h2>
+            <span id="page-count"></span>
+          </div>
+          <ol id="pages"></ol>
+          <button id="add-page" class="add-page" data-i18n="addPage">
+            ＋ Añadir página
+          </button>
+          <div class="page-actions">
+            <button id="move-up" data-i18n="up">↑ Subir</button
+            ><button id="move-down" data-i18n="down">↓ Bajar</button
+            ><button id="rename-page" data-i18n="rename">Renombrar</button
+            ><button id="delete-page" data-i18n="delete">Eliminar</button>
+          </div>
+          <p class="tip" data-i18n="tip">
+            Haz doble clic sobre un texto para escribir. Usa el botón de imagen
+            para añadir una del dispositivo.
+          </p>
+        </aside>
+        <div class="editor-panel">
+          <div class="editor-toolbar">
+            <span id="page-name"></span
+            ><button id="edit-page" data-i18n="edit">Editar página</button
+            ><button id="add-image" data-i18n="image">＋ Imagen</button
+            ><button id="draw" data-i18n="draw">✎ Dibujar</button
+            ><button id="select" data-i18n="select">Seleccionar</button
+            ><button id="advanced" data-i18n="advanced">Editor completo</button>
+          </div>
+          <div id="engine-host"></div>
+        </div>
+      </div>
+    </section>
+    <dialog id="create-dialog">
+      <form id="create-form">
+        <div class="dialog-heading">
+          <h2 data-i18n="createTitle">Vamos a crear un libro</h2>
+          <button
+            type="button"
+            class="icon-button"
+            id="close-create"
+            aria-label="Cerrar"
+          >
+            ×
+          </button>
+        </div>
+        <label for="title" data-i18n="title">Título del libro</label
+        ><input id="title" required maxlength="120" autocomplete="off" />
+        <fieldset>
+          <legend data-i18n="template">Elige una plantilla</legend>
+          <div class="templates">
+            <label
+              ><input type="radio" name="template" value="story" checked /><span
+                class="template-card peach"
+                ><b data-i18n="story">Un cuento</b
+                ><small data-i18n="storyHelp"
+                  >Portada y dos páginas para imaginar</small
+                ></span
+              ></label
+            ><label
+              ><input type="radio" name="template" value="album" /><span
+                class="template-card sage"
+                ><b data-i18n="album">Álbum de recuerdos</b
+                ><small data-i18n="albumHelp"
+                  >Un lugar para tus fotos y palabras</small
+                ></span
+              ></label
+            ><label
+              ><input type="radio" name="template" value="blank" /><span
+                class="template-card cream"
+                ><b data-i18n="blank">A tu manera</b
+                ><small data-i18n="blankHelp"
+                  >Una página en blanco para empezar</small
+                ></span
+              ></label
+            >
+          </div>
+        </fieldset>
+        <button class="primary" type="submit" data-i18n="start">
+          Crear y empezar →
+        </button>
+      </form>
+    </dialog>
+    <dialog id="reader">
+      <div class="reader-toolbar">
+        <button id="close-reader" data-i18n="returnEdit">
+          ← Volver a editar</button
+        ><strong id="reader-title"></strong
+        ><button id="export-html" data-i18n="html">Descargar para leer</button
+        ><button id="export-epub">EPUB</button>
+      </div>
+      <div id="reader-page" class="reader-page"></div>
+      <div class="reader-navigation">
+        <button id="prev" data-i18n="prev">← Anterior</button
+        ><span id="reader-position"></span
+        ><button id="next" data-i18n="next">Siguiente →</button>
+      </div>
+    </dialog>
+    <dialog id="image-picker" aria-labelledby="image-picker-title">
+      <div class="dialog-heading">
+        <h2 id="image-picker-title" data-i18n="chooseImage">Elegir imagen</h2>
+        <button id="close-image-picker" data-i18n="close">Cerrar</button>
+      </div>
+      <div class="image-sources">
+        <button id="device-image" data-i18n="deviceImage">
+          Desde el dispositivo
+        </button>
+        <button id="rebost-sprites" data-i18n="rebostSprites">
+          Rebost: ilustraciones y personajes
+        </button>
+        <button id="rebost-backgrounds" data-i18n="rebostBackgrounds">
+          Rebost: fondos
+        </button>
+        <button id="refresh-rebost" data-i18n="refreshRebost">
+          Actualizar tras entrar
+        </button>
+      </div>
+      <p data-i18n="rebostHint">
+        Entra en Commons con la misma dirección que usas aquí. Después, pulsa
+        Actualizar.
+      </p>
+      <div id="rebost-host"></div>
+    </dialog>
+    <dialog id="publish-dialog" aria-labelledby="publish-heading">
+      <div class="dialog-heading">
+        <h2 id="publish-heading" data-i18n="publishBook">Publicar el libro</h2>
+        <button id="close-publish" data-i18n="close">Cerrar</button>
+      </div>
+      <p data-i18n="publishIntro">
+        Revisa el libro antes de compartirlo. Cualquier persona podrá leer la
+        publicación.
+      </p>
+      <section id="publication-current" role="status" aria-live="polite" hidden>
+        <h3
+          id="publication-success-title"
+          tabindex="-1"
+          data-i18n="publicationDone"
+        >
+          Libro publicado en el banco de recursos.
+        </h3>
+        <p data-i18n="publicationActive">
+          El libro está publicado. Puedes compartir su enlace.
+        </p>
+        <a
+          id="publication-link"
+          target="_blank"
+          rel="noopener"
+          data-i18n="openPublication"
+          >Leer publicación</a
+        >
+        <button id="copy-publication" data-i18n="copyPublication">
+          Copiar enlace
+        </button>
+        <button id="withdraw-publication" data-i18n="withdrawPublication">
+          Retirar publicación
+        </button>
+      </section>
+      <p id="publication-feedback" role="alert"></p>
+      <section id="publication-login" hidden>
+        <p data-i18n="publicationLogin">
+          Entra con tu cuenta docente de Commons para publicar.
+        </p>
+        <a
+          class="button"
+          id="publication-sign-in"
+          href="/api/auth/oidc/login?next=%2Fllibres-login.html%3Flang%3Des"
+          target="_blank"
+          rel="noopener"
+          data-i18n="publicationSignIn"
+          >Entrar con cuenta docente</a
+        >
+        <button id="check-publication-login" data-i18n="refreshRebost">
+          Actualizar tras entrar
+        </button>
+      </section>
+      <form id="publish-form" hidden>
+        <h3 id="publish-title"></h3>
+        <img id="publish-cover" width="320" height="180" alt="" />
+        <label
+          ><span data-i18n="publishAuthor">Autoría o pseudónimo</span
+          ><input
+            id="publish-author"
+            required
+            maxlength="120"
+            autocomplete="off"
+        /></label>
+        <label
+          ><span data-i18n="publishDescription">Descripción</span
+          ><textarea
+            id="publish-description"
+            maxlength="2000"
+            rows="3"
+          ></textarea>
+        </label>
+        <label
+          ><span data-i18n="publishLicense">Licencia del libro</span
+          ><select id="publish-license">
+            <option value="CC-BY-SA-4.0">CC BY-SA 4.0</option>
+            <option value="CC-BY-4.0">CC BY 4.0</option>
+            <option value="CC0-1.0">CC0 1.0</option>
+          </select></label
+        >
+        <label class="check"
+          ><input id="publish-editable" type="checkbox" /><span
+            data-i18n="publishEditable"
+            >Ofrecer el .elpx editable, incluidos los recursos del
+            proyecto</span
+          ></label
+        >
+        <label class="check"
+          ><input id="publish-confirm" type="checkbox" required /><span
+            data-i18n="publishConfirm"
+            >He revisado el libro, sus imágenes y créditos, y quiero publicarlo
+            para que otras personas lo lean.</span
+          ></label
+        >
+        <button
+          id="confirm-publish"
+          type="submit"
+          class="primary"
+          data-i18n="publishBook"
+        >
+          Publicar
+        </button>
+      </form>
+    </dialog>
+    <dialog id="shared-dialog" aria-labelledby="shared-heading">
+      <div class="dialog-heading">
+        <h2 id="shared-heading" data-i18n="sharedStories">
+          Historias compartidas
+        </h2>
+        <button id="close-shared" data-i18n="close">Cerrar</button>
+      </div>
+      <p data-i18n="sharedIntro">
+        Libros publicados en el banco de recursos de EduTicTac. Puedes leerlos
+        sin iniciar sesión.
+      </p>
+      <a
+        id="shared-bank"
+        target="_blank"
+        rel="noopener"
+        data-i18n="openBank"
+        hidden
+        >Abrir banco de recursos</a
+      >
+      <form id="shared-search-form">
+        <input
+          id="shared-search"
+          type="search"
+          maxlength="200"
+          aria-label="Buscar libros"
+        /><button data-i18n="searchBooks">Buscar</button>
+      </form>
+      <p id="shared-status" role="status"></p>
+      <div id="shared-books" class="books"></div>
+      <button id="shared-more" data-i18n="moreBooks" hidden>Mostrar más</button>
+    </dialog>
+    <dialog id="published-reader" aria-labelledby="published-title">
+      <div class="dialog-heading">
+        <h2 id="published-title"></h2>
+        <button id="close-published-reader" data-i18n="close">Cerrar</button>
+      </div>
+      <iframe
+        id="published-frame"
+        title="Llibre publicat"
+        sandbox="allow-downloads"
+      ></iframe>
+    </dialog>
+    <input
+      id="image-input"
+      type="file"
+      accept="image/png,image/jpeg,image/webp"
+      hidden
+    /><input id="file-input" type="file" accept=".elpx" hidden />
+    <div id="notice" role="status" aria-live="polite" hidden></div>
+    <div id="busy" hidden role="status">
+      <span class="spinner"></span><span id="busy-text"></span>
+    </div>
+  </body>
+</html>

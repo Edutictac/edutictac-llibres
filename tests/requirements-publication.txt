@@ -1,0 +1,3 @@
+# Optional real-bank integration tests; sibling checkout required.
+-r requirements.txt
+-r ../../recursos-api/requirements.txt
