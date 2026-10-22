@@ -32,9 +32,12 @@ def school(bank,tmp_path,monkeypatch):
     from fastapi import Response
     response=Response();school.set_oidc_cookie(response,{'iss':school.OIDC_ISSUER_URL,'sub':'synthetic-class-teacher'},'profesor')
     cookie=response.headers['set-cookie'].split(';')[0];name,value=cookie.split('=',1)
-    # The teacher ID is the same opaque identifier used by Commons classroom ownership.
-    import hmac,hashlib
-    teacher_id='oidc:'+hmac.new(school.SESSION_SECRET.encode(),f'{school.OIDC_ISSUER_URL}:synthetic-class-teacher'.encode(),hashlib.sha256).hexdigest()[:20]
+    # Ask Commons for the opaque identity; its signing internals are not a public API.
+    from fastapi.testclient import TestClient
+    with TestClient(school.app) as teacher_client:
+        identity=teacher_client.get('/api/auth/me',headers={'Cookie':cookie})
+        assert identity.status_code == 200
+        teacher_id=identity.json()['identity']['id']
     with school.get_conn() as db:
         db.execute("INSERT INTO groups (id,name,created_by_teacher_id,created_at,updated_at) VALUES ('class-one','Aula de prova',?,'2026','2026')",(teacher_id,))
         db.execute("INSERT INTO student_identities (id,group_id,public_code,pin_hash,created_at,updated_at) VALUES ('pupil-one','class-one','ABC',?,'2026','2026')",(school.hash_pin('1234'),))
