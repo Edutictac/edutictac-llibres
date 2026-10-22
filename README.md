@@ -218,3 +218,10 @@ mantener el editor y el libro abiertos en su idioma.
 Pruebas: `python -m pytest tests/test_language.py tests/test_vue_application.py
  tests/test_workshop.py -q` con las dependencias de `tests/requirements.txt` y la
 instancia local en 8098 (configurable con `LLIBRES_TEST_URL`).
+
+## Preparación en el VPS
+
+El candidato de producción tiene un perfil separado, de solo lectura y accesible
+únicamente por loopback. El editor y el selector Rebost están disponibles; la
+publicación permanece desactivada hasta integrar la API del banco. Procedimiento,
+comprobaciones y reversión en [PRODUCTION.md](docs/PRODUCTION.md).
