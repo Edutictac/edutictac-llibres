@@ -1,0 +1,7 @@
+#!/bin/sh
+# Reload only when this application's dedicated certificate was renewed.
+set -eu
+if [ "${RENEWED_LINEAGE:-}" = /etc/letsencrypt/live/llibres.edutictac.es ]; then
+    /usr/sbin/nginx -t
+    /usr/bin/systemctl reload nginx
+fi

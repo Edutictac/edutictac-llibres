@@ -1,6 +1,7 @@
-# Preparación de Llibres en el VPS
+# Llibres en el VPS
 
-Esta fase instala un candidato privado. No abre el dominio ni activa publicación.
+El perfil Docker de preparación escucha en loopback. La apertura pública se
+realiza con el vhost HTTPS independiente descrito al final de este documento.
 El editor funciona sin cuentas; Rebost se consulta mediante el portal Commons
 existente y conserva sus permisos. No se duplican catálogos ni servicios de identidad.
 
@@ -113,3 +114,59 @@ Antes de abrir: mantener la comprobación del frontend del Banc (ya actualizado
 a Vue y con lector de libros), crear vhost/certificado
 independiente de Llibres, habilitar publicación y comprobar con cuentas reales.
 No se han modificado DNS, certificados ni los servicios de Play y EduHoot.
+
+## Apertura HTTPS
+
+Plantillas del nginx del host en `deploy/nginx/`: `llibres.http.conf` sirve
+únicamente ACME para la primera emisión; `llibres.https.conf` sirve el editor
+mediante `127.0.0.1:8182` y redirige HTTP a HTTPS. No copiar estas plantillas
+dentro del contenedor: son el frontal público del host.
+
+1. Registrar los hashes de todos los certificados actuales, estado de
+   contenedores y Play en una línea base privada. Comprobar DNS A/AAAA.
+2. Instalar el vhost HTTP y comprobar el desafío por IPv4 e IPv6 públicos.
+3. Emitir con Certbot/webroot un certificado **nuevo y exclusivo** con nombre
+   `llibres.edutictac.es`, único dominio `llibres.edutictac.es` y raíz
+   `/var/www/commons-acme`. Reutilizar la cuenta ACME existente sin mostrar sus
+   credenciales. No usar `--expand` ni reemplazar `edutictac.es`.
+4. Regenerar `public/source/llibres-source.zip` con `scripts/source-archive.py`
+   y copiarlo a `/var/www/llibres-source/llibres-source.zip` (directorio 755,
+   archivo 644). Contiene también las plantillas del host; no contiene datos,
+   credenciales, claves, libros ni el directorio vendor.
+5. Instalar el vhost HTTPS con `publication-status` temporalmente en `false`.
+   Ejecutar `nginx -t`, recargar y esperar disponibilidad HTTPS. Verificar TLS,
+   archivos/motor/selector Rebost, permisos anónimos y origen de las redirecciones.
+6. Publicar la plantilla final, que habilita `publication-status` **solo en
+   HTTPS**; repetir pruebas y conservar la aprobación real con cuentas como
+   comprobación humana pendiente. El perfil loopback mantiene `enabled: false`.
+   El indicador muestra los controles de publicación; Commons sigue exigiendo
+   una sesión válida y la pertenencia al aula para cualquier operación.
+
+La API, sus secretos, los contenedores y sus volúmenes no cambian en esta fase.
+El frontal preserva Host y fija `X-Forwarded-Proto: https`. El proxy del editor
+conserva la eliminación de cabeceras de identidad proporcionadas por visitantes.
+Acceso docente → Commons → proveedor existente; alumnado → Commons → código/PIN.
+La cookie segura compartida entre subdominios sigue siendo la de Commons.
+
+```sh
+LLIBRES_PRODUCTION_TEST_URL=https://llibres.edutictac.es \
+LLIBRES_PUBLICATION_EXPECT_ENABLED=1 \
+  python -m pytest tests/test_production_profile.py -q
+```
+
+Las pruebas solo intentan escrituras anónimas rechazadas; el navegador bloquea
+cualquier escritura de red y sus libros se guardan en un contexto efímero.
+No confundir una redirección correcta con haber iniciado sesión personalmente.
+Completar manualmente: docente entra y publica; alumnado entra con código/PIN,
+envía; su tutor aprueba; el libro aparece y se lee sin cuenta en el Banc.
+
+Para retirar la publicación, cambiar únicamente el indicador del vhost a
+`false` y recargar nginx. Esto oculta controles; **no revoca permisos ni borra
+libros publicados**. Para retirar la aplicación pública, deshabilitar solo este
+vhost y recargar; conservar certificado, datos y perfil Docker. No restaurar
+SQLite ni cambiar los certificados compartidos. Certbot puede renovar el nuevo
+certificado con el mismo webroot. El temporizador `certbot.timer` existente
+ejecuta la renovación. Instalar `deploy/certbot/llibres-nginx` como archivo
+ejecutable root 755 en `/etc/letsencrypt/renewal-hooks/deploy/40-llibres-nginx`:
+valida y recarga nginx únicamente cuando se renueva el certificado de Llibres.
+No altera la renovación de los certificados compartidos.
