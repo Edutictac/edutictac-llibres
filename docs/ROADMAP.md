@@ -36,6 +36,6 @@ Petición expresa del usuario, 21-10-2026. Implementado como conexión opcional.
       una nueva aprobación.
 - [x] Mantener el aislamiento por aula de los envíos y conservar los borradores en el navegador.
 
-Pendiente de una integración posterior: vincular alumnos de Authentik con aulas
-de Commons. Esta primera revisión utiliza las credenciales de código y PIN que
-ya tienen un aula y responsables verificados.
+El alumnado utiliza el código y PIN de su aula de Commons. Authentik se utiliza
+para el acceso docente; no se prevé migrar el acceso del alumnado a Authentik.
+La revisión ya reutiliza el aula y sus responsables verificados.

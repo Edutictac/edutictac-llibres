@@ -196,5 +196,5 @@ Con la conexión opcional de publicación activada, el alumnado entra con su có
 y PIN del aula y elige **Enviar a mi docente**. El envío permanece privado.
 El docente abre **Revisar libros · Docentes** para leer, devolver con comentario
 o aprobar la publicación. Cambios posteriores requieren otra aprobación.
-Los alumnos OIDC aún deben usar el código/PIN para vincularse al aula.
+El alumnado utiliza el código y PIN del aula de Commons; no necesita Authentik.
 Detalles de permisos y conservación en [RESOURCE_PUBLICATION.md](docs/RESOURCE_PUBLICATION.md).

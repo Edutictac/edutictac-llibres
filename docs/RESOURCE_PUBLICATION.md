@@ -146,9 +146,10 @@ se rechazan con conflicto: actualizar la bandeja y volver a leer antes de decidi
   aprobación comprueba además que la identidad del alumno siga activa y vinculada
   a esa aula. Un alumno revocado, eliminado o trasladado no puede obtener una nueva
   aprobación en su aula anterior; el responsable anterior puede retirar la copia.
-- Una cuenta OIDC con rol alumno todavía no tiene vínculo verificado con un aula
-  de Commons. Para esta primera versión debe usar el código/PIN del aula. No se
-  conceden permisos docentes ni se crean cuentas automáticamente.
+- El alumnado utiliza las credenciales de código y PIN de su aula de Commons.
+  Authentik se utiliza para el acceso docente, no como una integración pendiente
+  para el alumnado. No se conceden permisos docentes ni se crean cuentas
+  automáticamente.
 - Las solicitudes y archivos privados usan dos tablas adicionales en la misma
   SQLite: `llibres_submissions` y `llibres_review_files`. Se validan con el mismo
   compilador de SVG/PNG del lector público. Aprobar copia la versión revisada al
