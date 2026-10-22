@@ -4,6 +4,12 @@ Taller de libros ilustrados con eXeLearning e integración opcional con Commons.
 Funciona sin Commons ni cuentas. Ofrece una conexión **opcional de lectura** a
 Rebost y una conexión opcional de publicación al banco común. No usa servicios de IA ni modifica los archivos de eXeLearning.
 
+Instalación pública: **https://llibres.edutictac.es/**, sin necesidad de Tailscale.
+Crear y guardar libros en el navegador no requiere cuenta. Para compartirlos en
+el Banc se utiliza la cuenta docente de EduTicTac; el alumnado entra con código
+y PIN de aula y envía sus libros para la aprobación de su docente.
+Despliegue y comprobaciones en [docs/PRODUCTION.md](docs/PRODUCTION.md).
+
 ## Iniciar
 
 ```sh

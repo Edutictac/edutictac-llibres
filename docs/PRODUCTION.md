@@ -1,5 +1,11 @@
 # Llibres en el VPS
 
+**Estado actual, 22-10-2026:** disponible públicamente en
+https://llibres.edutictac.es/ con certificado propio y controles de publicación
+activados. El circuito con cuentas reales queda pendiente de aceptación humana;
+las pruebas automatizadas de publicación y revisión usan identidades y bases
+temporales, sin crear libros ni cuentas de prueba en producción.
+
 El perfil Docker de preparación escucha en loopback. La apertura pública se
 realiza con el vhost HTTPS independiente descrito al final de este documento.
 El editor funciona sin cuentas; Rebost se consulta mediante el portal Commons
@@ -170,3 +176,48 @@ ejecuta la renovación. Instalar `deploy/certbot/llibres-nginx` como archivo
 ejecutable root 755 en `/etc/letsencrypt/renewal-hooks/deploy/40-llibres-nginx`:
 valida y recarga nginx únicamente cuando se renueva el certificado de Llibres.
 No altera la renovación de los certificados compartidos.
+
+Ensayo manual de renovación sin sustituir el certificado activo:
+
+```sh
+sudo certbot renew --dry-run --cert-name llibres.edutictac.es \
+  --non-interactive --no-random-sleep-on-renew
+```
+
+La última opción evita la espera aleatoria prevista para ejecuciones automáticas;
+no cambiar la programación habitual del temporizador para realizar este ensayo.
+
+## Resultado de apertura — 22-10-2026
+
+El vhost público coincide con `deploy/nginx/llibres.https.conf`. Certificado
+independiente emitido con el webroot existente; acceso HTTPS IPv4/IPv6 devuelve
+200 y verificación TLS correcta. Los 14 certificados anteriores conservan su
+hash. Ensayo de renovación correcto y hook dedicado probado para Llibres y para
+el caso de otro certificado (no hace nada). Temporizador Certbot activo.
+
+Publicación habilitada en HTTPS; el perfil privado conserva `enabled: false`.
+La consulta anónima no concede ningún permiso aunque se envíen cabeceras de
+identidad falsas. El acceso docente y el de alumnado redirigen a Commons con
+retorno a la página de acceso de Llibres. Se ha verificado que la cookie de ID
+sigue siendo segura y compartida entre subdominios, sin cambiar su configuración.
+
+28 comprobaciones distintas correctas: 17 del perfil HTTPS y del selector real
+Rebost (incluido el aviso de acceso al intentar publicar anónimamente), 2 de
+edición/dibujo/descarga y reapertura sobre HTTPS, 1 de publicación/actualización/
+lectura/retirada con editor público y API temporal, 2 del circuito de revisión
+con sesiones y bases locales temporales y 6 de permisos y aislamiento en Commons.
+Las 17 del perfil se ejecutaron antes y después de activar los controles.
+Se actualizó un fixture de revisión para consultar el identificador docente a
+Commons, en lugar de depender de una constante interna retirada; ambos idiomas
+del circuito pasan. No se modificó el código de producción de autenticación.
+
+Imagen Docker sin cambios:
+`sha256:cf0563a8e48c31243daa091765abd96dded5d4b3c4f906720565e8e6a34bee53`.
+No se reinician contenedores, API, Commons, Play ni EduHoot. DNS, bases de datos
+y credenciales no cambian. Solo se añade el vhost/certificado y se recarga nginx.
+
+Línea base, resultados y diagnóstico privado de Certbot en
+`/opt/edutictac-llibres/https-activation/`. Para desactivar los controles existe
+la copia `https-publication-disabled.conf`; restaurar solo esa configuración y
+recargar nginx, sin tocar los datos. La fuente correspondiente publicada en
+`/source/llibres-source.zip` incluye las plantillas HTTPS y el hook de renovación.
