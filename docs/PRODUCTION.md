@@ -51,12 +51,12 @@ Descargar `.elpx` permite trasladarlos.
 
 ## Integración posterior
 
-La ID API desplegada ya contiene el adaptador Llibres, pero aún no tiene
-configurada su URL del Banc ni el token de aplicación. El Banc público utiliza
-una API anterior. Deben prepararse copia consistente, ensayo sobre una copia,
-actualización de API y conexión autenticada entre servidores antes de activar
-la publicación. Mantener acceso docente con cuenta EduTicTac y alumnado con
-código/PIN de su aula; aprobar únicamente mediante su docente responsable.
+La conexión de API y las copias consistentes ya están preparadas, según el
+apartado de conexión al final. El frontend público del Banc sigue siendo anterior
+a Vue y todavía no consulta los libros. Antes de activar la publicación hay que
+actualizar ese frontend y preparar HTTPS del editor. Mantener acceso docente con
+cuenta EduTicTac y alumnado con código/PIN de su aula; aprobar únicamente mediante
+su docente responsable.
 
 Después se prepara vhost de `llibres.edutictac.es`, certificado TLS independiente
 (sin sustituir certificados compartidos), comprobaciones de origen/cookies y
@@ -87,3 +87,29 @@ Una prueba adicional de navegador incorpora una imagen real del catálogo Rebost
 crea la diapositiva de créditos y guarda el libro en el navegador. Las solicitudes
 de escritura de red están bloqueadas durante la prueba y no se produce ninguna.
 No se usan cuentas personales ni se publican libros de prueba en el Banc.
+
+## Conexión de API — 22-10-2026
+
+El candidato ahora utiliza la imagen
+`sha256:cf0563a8e48c31243daa091765abd96dded5d4b3c4f906720565e8e6a34bee53`.
+Las rutas `/api/llibres/` conectan con Commons, que autentica al usuario y reenvía
+al Banc con su credencial interna. El proxy elimina cabeceras de identidad
+proporcionadas por el cliente. El visitante anónimo no puede publicar, enviar ni
+revisar. El botón de publicación sigue oculto (`enabled: false`) hasta HTTPS.
+
+La API pública del Banc ya está actualizada y las copias automáticas de Commons
+incluyen su base y configuración, con recuperación de ambas bases desde el NAS.
+La ID API conserva imagen y cuentas pero escucha ahora en loopback del host,
+para alcanzar la API del Banc sin añadir otro proxy. Los detalles y la reversión
+se documentan en `recursos-api/docs/PRODUCTION_LLIBRES.md`.
+
+15 pruebas sobre este perfil real, incluyendo imagen real de Rebost y créditos,
+correctas. Salud y redirección de acceso docente comprobadas sin entrar con una
+cuenta real. La publicación, aislamiento por clase y aprobación se ensayaron
+sobre copias privadas con actores sintéticos, sin crear publicaciones de prueba
+en producción.
+
+Antes de abrir: actualizar el frontend público del Banc (su API ya está lista,
+pero su interfaz anterior todavía no consulta libros), crear vhost/certificado
+independiente de Llibres, habilitar publicación y comprobar con cuentas reales.
+No se han modificado DNS, certificados ni los servicios de Play y EduHoot.

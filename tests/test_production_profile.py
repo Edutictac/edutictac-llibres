@@ -26,9 +26,14 @@ def test_editor_and_shared_picker_available(path):
     assert body
 
 
-def test_publication_stays_disabled_until_bank_integration():
+def test_publication_ui_stays_closed_with_anonymous_api_connected():
     assert json.loads(response('/publication-status')[1]) == {'enabled': False}
-    assert response('/api/llibres/me')[0] == 503
+    status, body, _ = response('/api/llibres/me')
+    assert status == 200
+    permissions = json.loads(body)
+    assert not any(permissions.get(key) for key in ['can_publish', 'can_submit', 'can_review'])
+    assert response('/api/llibres/books')[0] == 200
+    assert response('/api/llibres/mine/01234567-89ab-cdef-0123-456789abcdef', 'POST')[0] == 401
 
 
 @pytest.mark.parametrize('method', ['POST', 'PATCH', 'DELETE'])
