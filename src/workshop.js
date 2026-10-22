@@ -5,11 +5,22 @@ import { messages } from "/i18n.js";
 import { inspectBook } from "/import.js";
 import { publicationPackage, coverImage } from "/publication.js";
 
+const supportedLanguages = ["es", "ca", "va", "en"];
+function preferredLocale(savedOnly = false) {
+  const shared = savedOnly ? window.commonsLanguage?.stored() : window.commonsLanguage?.read();
+  if (supportedLanguages.includes(shared)) return shared;
+  try {
+    const stored = localStorage.getItem("llibres-language");
+    if (supportedLanguages.includes(stored)) return stored;
+  } catch {}
+  return "es";
+}
+
 // Vue receives display state only. eXe instances, DOM and project bytes remain
 // ordinary objects so they can cross the bridge and IndexedDB unchanged.
 export function createWorkshop(view) {
   const state = reactive({
-    locale: localStorage.getItem("llibres-language") === "va" ? "va" : "es",
+    locale: preferredLocale(),
     active: false,
     busy: false,
     busyKey: "working",
@@ -85,11 +96,13 @@ export function createWorkshop(view) {
       await nextTick();
     }
   }
-  function language(value) {
-    state.locale = value === "va" ? "va" : "es";
-    localStorage.setItem("llibres-language", state.locale);
+  function language(value, remember = true) {
+    if (!supportedLanguages.includes(value)) return;
+    state.locale = value;
+    try { localStorage.setItem("llibres-language", state.locale); } catch {}
+    if (remember) window.commonsLanguage?.remember(state.locale);
     document.documentElement.lang =
-      state.locale === "va" ? "ca-valencia" : "es";
+      state.locale === "va" ? "ca-valencia" : state.locale;
   }
   function markDirty() {
     if (!book) return;
@@ -118,7 +131,7 @@ export function createWorkshop(view) {
     );
     prefs.userPreferences ||= {};
     prefs.userPreferences.locale = {
-      value: state.locale === "va" ? "ca-valencia" : "es",
+      value: state.locale === "va" ? "ca-valencia" : state.locale,
     };
     localStorage.setItem("exe_user_preferences", JSON.stringify(prefs));
     const frame = document.createElement("iframe");
@@ -208,6 +221,7 @@ export function createWorkshop(view) {
     book = null;
     dirty = false;
     state.active = false;
+    syncLanguage();
     view.host().replaceChildren();
     await view.refreshShelf();
   }
@@ -319,6 +333,8 @@ export function createWorkshop(view) {
   }
   async function start() {
     language(state.locale);
+    window.addEventListener("pageshow", syncLanguage);
+    window.addEventListener("focus", syncLanguage);
     window.addEventListener("beforeunload", beforeUnload);
     for (const [path, field] of [
       ["publication", "publicationEnabled"],
@@ -335,7 +351,13 @@ export function createWorkshop(view) {
       notice(t("storageError"), true);
     }
   }
+  function syncLanguage() {
+    // Keep an open book and the engine in their current language.
+    if (!state.active) language(preferredLocale(true));
+  }
   function dispose() {
+    window.removeEventListener("pageshow", syncLanguage);
+    window.removeEventListener("focus", syncLanguage);
     clearTimeout(noticeTimer);
     window.removeEventListener("beforeunload", beforeUnload);
   }

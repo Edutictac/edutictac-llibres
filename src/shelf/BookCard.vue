@@ -7,7 +7,7 @@ defineEmits(["open", "remove"]);
 const t = (key) => messages[props.locale][key] || key;
 const date = computed(() =>
   new Date(props.book.updatedAt).toLocaleDateString(
-    props.locale === "va" ? "ca-ES" : "es-ES",
+    props.locale === "va" ? "ca-ES-valencia" : props.locale,
   ),
 );
 </script>

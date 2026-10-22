@@ -20,7 +20,8 @@ ROOT=Path(__file__).resolve().parents[2]
 def bank(tmp_path,monkeypatch):
     api=ROOT/'recursos-api'
     if not api.exists():pytest.skip('Sibling recursos-api repository is needed for publication integration tests')
-    monkeypatch.syspath_prepend(str(ROOT/'edutictac-commons/services/id-api/vendor'))
+    # Use recursos-api requirements; the older Commons vendored package lacks
+    # the current bank router contract (admin_unhide_path).
     monkeypatch.syspath_prepend(str(api))
     pytest.importorskip('edutictac_community')
     pytest.importorskip('authlib')
@@ -93,7 +94,7 @@ def test_escape_during_publication_loading_restores_editor(browser, bank):
     context.close()
 
 
-@pytest.mark.parametrize('lang',['es','va'])
+@pytest.mark.parametrize('lang',['es','va','ca','en'])
 def test_publish_read_update_bank_and_shared_withdraw_without_losing_draft(browser,bank,lang):
     module,client=bank
     context=browser.new_context(viewport={'width':1440,'height':720},accept_downloads=True)
@@ -122,7 +123,7 @@ def test_publish_read_update_bank_and_shared_withdraw_without_losing_draft(brows
     page.check('#publish-editable');page.check('#publish-confirm');page.click('#confirm-publish');idle(page)
     expect(page.locator('#publication-current')).to_be_visible()
     expect(page.locator('#publication-success-title')).to_have_text(
-        'Publicación actualizada en el banco de recursos.' if lang == 'es' else 'Publicació actualitzada en el banc de recursos.')
+        {'es':'Publicación actualizada en el banco de recursos.', 'va':'Publicació actualitzada en el banc de recursos.', 'ca':'Publicació actualitzada en el banc de recursos.', 'en':'Publication updated in the resource bank.'}[lang])
     expect(page.locator('#publication-success-title')).to_be_in_viewport()
     assert page.locator('#publication-link').get_attribute('href')==url
     assert client.get('/api/llibres/public/'+key+'/source.elpx').status_code==200
@@ -147,6 +148,7 @@ def test_publish_read_update_bank_and_shared_withdraw_without_losing_draft(brows
     page.locator('#shared-books .book-open').click()
     reader=page.frame_locator('#published-frame')
     expect(reader.locator('#page-1')).to_be_visible()
+    expect(reader.locator('html')).to_have_attribute('lang', 'ca-valencia' if lang == 'va' else lang)
     source_link = reader.locator('a[href="../../source.zip"]')
     expect(source_link).to_be_hidden()
     reader.locator('footer > details').last.locator('summary').click()

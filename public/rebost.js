@@ -86,7 +86,7 @@ export async function fetchImage(id, lang, signal) {
   )
     throw new Error("rebostError");
   const name = (
-    item.names?.[lang === "es" ? "es" : "ca"] ||
+    item.names?.[lang === "va" ? "ca" : lang] ||
     item.name ||
     "Rebost"
   ).slice(0, 200);

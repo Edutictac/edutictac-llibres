@@ -58,7 +58,7 @@ def choose(page):
     idle(page)
 
 
-@pytest.mark.parametrize('lang', ['es', 'va'])
+@pytest.mark.parametrize('lang', ['es', 'va', 'ca', 'en'])
 def test_rebost_gallery_portable_images_and_full_credits(browser, tmp_path, lang):
     context = browser.new_context(viewport={'width':1440, 'height':1000}, accept_downloads=True)
     reads = fixture_api(context)
@@ -75,7 +75,7 @@ def test_rebost_gallery_portable_images_and_full_credits(browser, tmp_path, lang
     expect(page.locator('#image-picker')).not_to_be_visible()
     assert frame.evaluate("__slideEditorCanvas.getObjects().some(o=>o.type==='image')")
     assert not frame.evaluate("__slideEditorCanvas.getObjects().some(o=>o.text?.includes('CC BY-SA 2.0'))")
-    expect(page.locator('.page-tab').last).to_contain_text('Créditos' if lang == 'es' else 'Crèdits')
+    expect(page.locator('.page-tab').last).to_contain_text({'es':'Créditos','va':'Crèdits','ca':'Crèdits','en':'Credits'}[lang])
     assert reads.count('/items/' + ID) == 2
     with page.expect_download(timeout=90000) as download:
         page.click('#download')

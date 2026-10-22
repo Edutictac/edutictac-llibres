@@ -32,7 +32,7 @@ No hay sincronización ni guardado automático durante la escritura.
 - Páginas con texto, imágenes del dispositivo y dibujo libre sencillo.
 - Añadir, renombrar, subir/bajar y eliminar páginas; al menos una página por libro.
 - Guardar/reabrir, descargar fuente `.elpx`, lectura de páginas, HTML y EPUB.
-- Interfaz propia en castellano y valenciano. Algunas herramientas del lienzo
+- Interfaz propia en castellano, catalán, valenciano e inglés. Algunas herramientas del lienzo
   upstream mantienen etiquetas inglesas.
 - El importador de Llibres acepta solo proyectos de páginas `slide`, con
   límites y comprobaciones de estructura. No pretende abrir cualquier curso eXe.
@@ -198,3 +198,23 @@ El docente abre **Revisar libros · Docentes** para leer, devolver con comentari
 o aprobar la publicación. Cambios posteriores requieren otra aprobación.
 El alumnado utiliza el código y PIN del aula de Commons; no necesita Authentik.
 Detalles de permisos y conservación en [RESOURCE_PUBLICATION.md](docs/RESOURCE_PUBLICATION.md).
+
+## Idioma compartido con Commons
+
+El selector ES/CA/VA/EN utiliza la preferencia funcional `edutictac_language`,
+compartida con Commons, Rebost, Play y el Banc bajo `edutictac.es`. No requiere
+iniciar sesión. `?lang=en` permite elegir explícitamente el idioma de llegada.
+Fuera de ese dominio se guarda en el host actual y se conserva la preferencia
+local anterior. La copia `public/language-preference.js` debe permanecer idéntica
+al helper de Commons; funciona sin conexión con ese servidor.
+
+Catalán y valenciano comparten una base con ajustes de vocabulario. El inglés
+incluye todos los mensajes del taller. Las nuevas plantillas, metadatos de idioma,
+fechas y créditos usan la elección actual; los libros existentes conservan su
+contenido. Durante la edición no se cambia de idioma automáticamente al volver
+de otra aplicación: la preferencia se aplica al regresar a la estantería, para
+mantener el editor y el libro abiertos en su idioma.
+
+Pruebas: `python -m pytest tests/test_language.py tests/test_vue_application.py
+ tests/test_workshop.py -q` con las dependencias de `tests/requirements.txt` y la
+instancia local en 8098 (configurable con `LLIBRES_TEST_URL`).

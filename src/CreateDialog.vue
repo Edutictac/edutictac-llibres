@@ -44,7 +44,7 @@ defineExpose({ open });
         ref="input"
         v-model="title"
         :placeholder="
-          locale === 'va' ? 'El meu primer llibre' : 'Mi primer libro'
+          t('firstBook')
         "
         required
         maxlength="120"

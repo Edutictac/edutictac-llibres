@@ -52,7 +52,9 @@ onUnmounted(core.dispose);
       aria-label="Idioma"
     >
       <option value="es">Castellano</option>
+      <option value="ca">Català</option>
       <option value="va">Valencià</option>
+      <option value="en">English</option>
     </select>
   </header>
   <main id="home" :hidden="state.active">
@@ -86,10 +88,10 @@ onUnmounted(core.dispose);
       </div>
       <div class="hero-art" aria-hidden="true">
         <div class="book-cover">
-          <span>EL MEU<br />MENUT<br />UNIVERS</span>
+          <span>{{ t("coverTop") }}<br />{{ t("coverBottom") }}</span>
           <div class="sun"></div>
           <div class="hill"></div>
-          <i>una història per descobrir</i>
+          <i>{{ t("storySubtitle") }}</i>
         </div>
         <span class="star">✳</span>
       </div>

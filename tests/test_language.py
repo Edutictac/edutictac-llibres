@@ -1,0 +1,70 @@
+"""Shared language preference and translated book creation, without real accounts."""
+import pytest
+from playwright.sync_api import expect
+from test_workshop import BASE, browser, idle
+
+
+@pytest.mark.parametrize(('lang', 'headline', 'cover'), [
+    ('es', 'Tu próxima historia empieza aquí.', 'Portada'),
+    ('va', 'La teua pròxima història comença ací.', 'Portada'),
+    ('ca', 'La teva pròxima història comença aquí.', 'Portada'),
+    ('en', 'Your next story starts here.', 'Cover'),
+])
+def test_shared_language_and_new_book(browser, lang, headline, cover):
+    context = browser.new_context()
+    context.add_cookies([dict(name='edutictac_language', value=lang, url=BASE)])
+    context.add_init_script("localStorage.setItem('llibres-language','es')")
+    page = context.new_page()
+    page.goto(BASE)
+    expect(page.locator('#language')).to_have_value(lang)
+    expect(page.locator('h1')).to_have_text(headline)
+    page.reload()
+    expect(page.locator('#language')).to_have_value(lang)
+    page.click('#new-book')
+    page.fill('#title', 'Language test')
+    page.click('#create-form button[type=submit]')
+    idle(page)
+    expect(page.locator('.page-tab').first).to_contain_text(cover)
+    frame = page.locator('#engine-host iframe').element_handle().content_frame()
+    metadata = frame.evaluate("eXeLearning.app.project._yjsBridge.documentManager.getMetadata().get('language')")
+    assert metadata == ('ca-valencia' if lang == 'va' else lang)
+    page.click('#add-page'); idle(page)
+    expect(page.locator('#page-name')).to_have_text(('Page' if lang == 'en' else 'Página' if lang == 'es' else 'Pàgina') + ' 3')
+    page.click('#save-book'); idle(page)
+    page.click('#back'); idle(page)
+    expect(page.locator('#books .book-open')).to_have_text('Language test')
+    context.close()
+
+
+def test_language_change_on_return_preserves_open_book(browser):
+    context = browser.new_context()
+    page = context.new_page()
+    page.goto(BASE + '?lang=en')
+    expect(page.locator('#language')).to_have_value('en')
+    page.select_option('#language', 'ca')
+    assert 'lang=ca' in page.url
+    assert next(c['value'] for c in context.cookies() if c['name'] == 'edutictac_language') == 'ca'
+    page.click('#new-book'); page.fill('#title', 'Keep my book')
+    page.click('#create-form button[type=submit]'); idle(page)
+    context.add_cookies([dict(name='edutictac_language', value='en', url=BASE)])
+    page.evaluate("window.dispatchEvent(new Event('focus'))")
+    expect(page.locator('#language')).to_have_value('ca')
+    page.click('#back'); idle(page)
+    expect(page.locator('#language')).to_have_value('en')
+    expect(page.locator('#books .book-open')).to_have_text('Keep my book')
+    page.reload()
+    expect(page.locator('#language')).to_have_value('en')
+    context.close()
+
+
+def test_all_four_dictionaries_cover_all_keys(browser):
+    context = browser.new_context()
+    page = context.new_page(); page.goto(BASE)
+    missing = page.evaluate('''async () => {
+      const {messages} = await import('/i18n.js');
+      return Object.fromEntries(['es','ca','va','en'].map(lang => [lang,
+        Object.keys(messages.es).filter(key => !messages[lang][key])
+      ]));
+    }''')
+    assert all(not keys for keys in missing.values()), missing
+    context.close()

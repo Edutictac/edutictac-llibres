@@ -1,3 +1,4 @@
+import { messages } from "/i18n.js";
 /* Version-pinned eXeLearning 4.0.5 adapter. Internal calls are confined here. */
 import {
   imageCredit,
@@ -370,7 +371,7 @@ export class Editor {
     if (!entries.length) {
       if (page) binding.deletePage(page.id);
     } else {
-      const title = locale.startsWith("ca") ? "Crèdits" : "Créditos";
+      const title = messages[locale === "ca-valencia" ? "va" : locale]?.credits || messages.es.credits;
       let created = false;
       if (!page) {
         page = binding.addPage(title);
@@ -464,39 +465,34 @@ export class Editor {
     });
   }
   async create(title, template, lang) {
+    const text = messages[lang] || messages.es;
     const b = this.bridge.structureBinding;
     for (const p of this.pages()) b.deletePage(p.id);
     const m = this.manager.getMetadata();
     for (const [k, v] of Object.entries({
       title,
-      language: lang === "va" ? "ca-valencia" : "es",
+      language: lang === "va" ? "ca-valencia" : lang,
       addPagination: "true",
       addExeLink: "true",
       exportSource: "true",
     }))
       m.set(k, v);
-    const cover = b.addPage("Portada");
+    const cover = b.addPage(text.cover);
     this.addSlide(
       cover.id,
       this.scene(
         title,
         template === "album" ? "#e4ebdc" : "#f6e3ce",
-        lang === "va"
-          ? "Una història per descobrir"
-          : "Una historia por descubrir",
+        text.storySubtitle,
       ),
     );
     if (template !== "blank")
       for (let i = 1; i <= 2; i++) {
-        const p = b.addPage((lang === "va" ? "Pàgina " : "Página ") + i);
+        const p = b.addPage(text.page + " " + i);
         this.addSlide(
           p.id,
           this.scene(
-            i === 1
-              ? lang === "va"
-                ? "Tot va començar…"
-                : "Todo empezó…"
-              : "",
+            i === 1 ? text.storyStart : "",
           ),
         );
       }
