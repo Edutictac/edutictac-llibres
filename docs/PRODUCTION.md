@@ -52,9 +52,9 @@ Descargar `.elpx` permite trasladarlos.
 ## Integración posterior
 
 La conexión de API y las copias consistentes ya están preparadas, según el
-apartado de conexión al final. El frontend público del Banc sigue siendo anterior
-a Vue y todavía no consulta los libros. Antes de activar la publicación hay que
-actualizar ese frontend y preparar HTTPS del editor. Mantener acceso docente con
+apartado de conexión al final. El frontend público del Banc ya está actualizado
+a Vue y consulta los libros, con lector y filtro propios (22-10-2026). Antes de
+activar la publicación hay que preparar HTTPS del editor. Mantener acceso docente con
 cuenta EduTicTac y alumnado con código/PIN de su aula; aprobar únicamente mediante
 su docente responsable.
 
@@ -109,7 +109,7 @@ cuenta real. La publicación, aislamiento por clase y aprobación se ensayaron
 sobre copias privadas con actores sintéticos, sin crear publicaciones de prueba
 en producción.
 
-Antes de abrir: actualizar el frontend público del Banc (su API ya está lista,
-pero su interfaz anterior todavía no consulta libros), crear vhost/certificado
+Antes de abrir: mantener la comprobación del frontend del Banc (ya actualizado
+a Vue y con lector de libros), crear vhost/certificado
 independiente de Llibres, habilitar publicación y comprobar con cuentas reales.
 No se han modificado DNS, certificados ni los servicios de Play y EduHoot.
