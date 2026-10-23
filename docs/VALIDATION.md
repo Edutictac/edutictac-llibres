@@ -1,5 +1,17 @@
 # Primera versión usable: verificación local
 
+## Lector compartit de mostres i taller — 23-10-2026
+
+24 proves locals correctes; 23 correctes i 1 omesa en el candidat VPS. Lectura
+de conte/còmic sense còpia, retorn amb Escape, enllaços antics, descàrrega editable
+i lectura/exportació dels llibres del taller comprovades. La comparació d'imatges
+del contingut del lector entre mostra i editable conserva dimensions i diferència
+mitjana inferior a 1/255 per canal; tots dos recorreguts usen el mateix component.
+
+Verificació pública: 23/24 correctes inicialment; el cas restant va esgotar el
+timeout descarregant traduccions de Rebost i passa en repetir-lo (HTTP 200,
+121212 bytes, 0,22 s amb curl). No es modifica el proxy ni s'utilitzen comptes reals.
+
 ## Mode còmic — 23-10-2026
 
 78 proves correctes en el frontal aïllat, 26 omissions de perfils opcionals;

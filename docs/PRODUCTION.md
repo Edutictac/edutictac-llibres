@@ -273,3 +273,26 @@ i font anteriors. Reversió: restaurar el Compose i font d'eixa còpia i recrear
 solament Llibres, sense restaurar bases de dades. Candidat 18183, túnel SSH i
 contenidor de proves local 18298 retirats. Fonts corresponents incloses al ZIP
 públic. Acceptació amb comptes personals reals pendent com en la fase anterior.
+
+## Lector únic per a les mostres — 23-10-2026
+
+Les targetes d'exemple ara utilitzen `ReaderDialog.vue`, el mateix component que
+el botó «Llig» del taller. Es mostra una pàgina cada vegada, amb anterior/següent
+i el mateix ajust visual. Llegir no importa el projecte, no inicia eXe i no crea
+llibres en IndexedDB. L'edició continua sent una acció explícita de còpia.
+Els enllaços `/examples/la-papallona/` i `/examples/la-granota/` es conserven i
+obrin el lector amb un paràmetre que només admet eixes dues mostres. El generador
+publica les pàgines en `slides.json`; no es manté una altra maquetació de lectura.
+
+Imatge actual:
+`sha256:34ac2803ec1c2c928518b681a6424f1e4b0cafe02900931b633bccae59614bce`.
+24 proves locals correctes (inclosa comparació de píxels entre lectura de mostra
+i d'editable, teclat, enllaços antics i lector del taller). Candidat: 23 correctes,
+1 omesa per ser exclusiva d'HTTPS. En públic es comproven els mateixos 24 casos:
+23 correctes en la primera execució i un timeout de transport en `rebost-i18n.js`;
+eixe cas passa en repetir-lo i curl comprova HTTP 200, 121212 bytes en 0,22 s.
+
+Només es recrea Llibres. Configuració del host, certificats, API i altres serveis
+conservats. Còpia i resultats en `/opt/edutictac-llibres/reader-20261023/`; el
+Compose anterior i la font pública anterior permeten retirar el canvi sense
+restaurar dades. Candidat privat i túnel retirats; cap compte personal utilitzat.
