@@ -83,7 +83,10 @@ def test_book_credits_are_deduplicated_sorted_and_stay_last_after_editing_and_re
     other.close()
 
 
-def test_old_inline_credits_migrate_to_final_slide(browser,tmp_path):
+def test_old_inline_credits_migrate_to_final_slide(browser,tmp_path,monkeypatch):
+    # Namespace registration is process-global. Keep this ODE fixture isolated
+    # from the SVG namespace used by the real bank imported in other tests.
+    monkeypatch.setattr(ET,'_namespace_map',ET._namespace_map.copy())
     context=browser.new_context(viewport={'width':1440,'height':1000},accept_downloads=True)
     fixture_api(context);page=context.new_page();create(page)
     page.click('#add-image');choose(page)
