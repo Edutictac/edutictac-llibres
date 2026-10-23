@@ -221,3 +221,24 @@ Línea base, resultados y diagnóstico privado de Certbot en
 la copia `https-publication-disabled.conf`; restaurar solo esa configuración y
 recargar nginx, sin tocar los datos. La fuente correspondiente publicada en
 `/source/llibres-source.zip` incluye las plantillas HTTPS y el hook de renovación.
+
+## Conte de mostra — 23-10-2026
+
+La portada pública incorpora «La papallona i els colors del bosc», un conte en
+valencià amb cinc pàgines i crèdits finals. Es pot llegir sense compte en
+`/examples/la-papallona/`, descarregar el `.elpx` o obrir una còpia editable que
+rep un identificador nou a l'estanteria. No és una publicació del Banc.
+Les cinc imatges provenen del catàleg públic Scratch del Rebost; imatges,
+atribucions, fonts originals i llicències queden incorporades al llibre.
+
+La imatge del servei s'actualitza a
+`sha256:16814869eb6398ba660c1ddac38eaca47993d6e7ba6cf7b4c9e4c8fd41e1f3d0`.
+S'ha comprovat en un candidat privat 18183 abans de substituir només Llibres;
+les altres aplicacions i Play conserven identificadors i hores d'arrancada.
+Es mantenen el vhost, HTTPS, els permisos i l'indicador públic de publicació.
+No es creen comptes ni publicacions de prova en el servidor.
+
+Còpia anterior de Compose, font pública i línia base en
+`/opt/edutictac-llibres/demo-20261023/`. Per a tornar arrere, restaurar eixe
+Compose i recrear només el servei `llibres`, conservant la font anterior i
+sense tocar SQLite o les dades del navegador. El candidat temporal es retira.
