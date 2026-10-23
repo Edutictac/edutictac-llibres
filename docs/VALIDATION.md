@@ -374,3 +374,15 @@ dependencias Python existentes; ningún fallo.
 
 Arquitectura y reproducción: [VUE_PILOT.md](VUE_PILOT.md). La comprobación manual
 con libros y cuentas reales corresponde al siguiente paso de aceptación.
+
+## Simplificación de acciones e idioma inicial — 23-10-2026
+
+- Botones de muestras con el mismo tamaño y estilo: leer, editar y descargar.
+  Extensión técnica retirada del texto visible, conservando formato y archivos.
+- 13 pruebas previas de muestras/idiomas aprobadas; revisión visual en ES, VA y
+  tamaño de tablet. Despliegue de etiquetas verificado sin reiniciar otras apps.
+- Primera visita: URL y preferencias guardadas tienen prioridad; en su ausencia,
+  se consulta la lista de idiomas del navegador. Variantes regionales ES/CA/EN
+  y `ca-ES-valencia` reconocidas; idioma sin traducción usa el siguiente de la
+  lista o castellano. 13 pruebas de idiomas aprobadas, con seis listas del
+  navegador y prioridad de URL, cookies y elección manual persistente.

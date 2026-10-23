@@ -2642,6 +2642,12 @@ function Xa(e = !1) {
 		let e = localStorage.getItem("llibres-language");
 		if (Ya.includes(e)) return e;
 	} catch {}
+	for (let e of navigator.languages?.length ? navigator.languages : [navigator.language]) {
+		let t = String(e || "").toLowerCase().replaceAll("_", "-");
+		if (t === "va" || t.startsWith("ca-") && t.split("-").includes("valencia")) return "va";
+		let n = t.split("-")[0];
+		if (Ya.includes(n)) return n;
+	}
 	return "es";
 }
 function Za(t) {

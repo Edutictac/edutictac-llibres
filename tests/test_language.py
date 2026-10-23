@@ -1,7 +1,35 @@
 """Shared language preference and translated book creation, without real accounts."""
+import json
 import pytest
 from playwright.sync_api import expect
 from test_workshop import BASE, browser, idle
+
+
+@pytest.mark.parametrize(('languages', 'expected'), [
+    (['en-GB', 'es'], 'en'),
+    (['ca-ES-valencia', 'es-ES'], 'va'),
+    (['ca-ES'], 'ca'),
+    (['es-MX'], 'es'),
+    (['fr-FR', 'en-US'], 'en'),
+    (['fr-FR'], 'es'),
+])
+def test_first_visit_uses_browser_language(browser, languages, expected):
+    context = browser.new_context()
+    context.add_init_script('Object.defineProperty(navigator, "languages", {get: () => ' + json.dumps(languages) + '})')
+    page = context.new_page(); page.goto(BASE)
+    expect(page.locator('#language')).to_have_value(expected)
+    expect(page.locator('html')).to_have_attribute('lang', 'ca-valencia' if expected == 'va' else expected)
+    page.select_option('#language', 'ca' if expected == 'en' else 'en')
+    page.reload()
+    expect(page.locator('#language')).to_have_value('ca' if expected == 'en' else 'en')
+    context.close()
+
+
+def test_explicit_language_overrides_browser(browser):
+    context = browser.new_context(locale='en-GB')
+    page = context.new_page(); page.goto(BASE + '?lang=va')
+    expect(page.locator('#language')).to_have_value('va')
+    context.close()
 
 
 @pytest.mark.parametrize(('lang', 'headline', 'cover'), [
