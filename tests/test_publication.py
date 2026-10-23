@@ -58,9 +58,10 @@ def routes(context,bank,can_publish=True):
         if url.hostname=='bank.test':
             if path in ('/data/games.json','/data/games-home.json'):return route.fulfill(json=[])
             if path.startswith('/reports/'):return route.fulfill(json={})
-            file=(ROOT/'recursos'/path.lstrip('/')).resolve()
-            if path=='/':file=ROOT/'recursos/index.html'
-            if file.is_relative_to(ROOT/'recursos') and file.is_file() and file.suffix in ('.js','.css','.html','.json','.png','.svg','.ico'):
+            bank_root=(ROOT/'recursos').resolve()
+            file=(bank_root/path.lstrip('/')).resolve()
+            if path=='/':file=bank_root/'index.html'
+            if file.is_relative_to(bank_root) and file.is_file() and file.suffix in ('.js','.css','.html','.json','.png','.svg','.ico'):
                 return route.fulfill(body=file.read_bytes(),content_type=mimetypes.guess_type(file)[0] or 'application/octet-stream')
             return route.fulfill(status=404)
         route.fallback()
