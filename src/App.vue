@@ -9,6 +9,7 @@ import ReaderDialog from "./ReaderDialog.vue";
 import ImagePicker from "./ImagePicker.vue";
 import PublicationDialog from "./PublicationDialog.vue";
 import SharedStories from "./SharedStories.vue";
+import DemoBook from "./DemoBook.vue";
 const shelf = ref(null),
   reviews = ref(null),
   createDialog = ref(null),
@@ -37,6 +38,16 @@ function imageFile(event) {
   const file = event.target.files[0];
   event.target.value = "";
   if (file) core.action(() => core.image(file));
+}
+function openDemo() {
+  core.action(async () => {
+    const response = await fetch('/examples/la-papallona/la-papallona.elpx');
+    if (!response.ok) throw new Error('invalid');
+    const bytes = await response.arrayBuffer();
+    if (bytes.byteLength > 25 * 1024 * 1024) throw new Error('invalid');
+    core.language('va', false);
+    await core.importFile(new File([bytes], 'La papallona i els colors del bosc.elpx', {type:'application/zip'}));
+  }, 'loading');
 }
 onMounted(core.start);
 onUnmounted(core.dispose);
@@ -96,6 +107,7 @@ onUnmounted(core.dispose);
         <span class="star">✳</span>
       </div>
     </section>
+    <DemoBook :locale="state.locale" :busy="state.busy" @edit="openDemo" />
     <Bookshelf
       ref="shelf"
       :locale="state.locale"

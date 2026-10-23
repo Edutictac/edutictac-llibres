@@ -603,3 +603,10 @@ for (const [lang, values] of Object.entries({
   ca: { firstBook: "El meu primer llibre", cover: "Portada", storySubtitle: "Una història per descobrir", storyStart: "Tot va començar…", credits: "Crèdits", coverTop: "EL MEU PETIT", coverBottom: "UNIVERS" },
   en: { firstBook: "My first book", cover: "Cover", storySubtitle: "A story to discover", storyStart: "It all began…", credits: "Credits", coverTop: "MY LITTLE", coverBottom: "UNIVERSE" },
 })) Object.assign(messages[lang], values);
+
+for (const [lang, values] of Object.entries({
+  va: {demoLabel:'UN CONTE DE MOSTRA · EN VALENCIÀ',demoDescription:'Descobrix què pots crear amb textos, imatges del Rebost i dibuixos. Obri una còpia i inventa el teu propi final.',demoRead:'Llig el conte',demoEdit:'Edita una còpia',demoDownload:'Descarrega .elpx'},
+  ca: {demoLabel:'UN CONTE DE MOSTRA · EN VALENCIÀ',demoDescription:'Descobreix què pots crear amb textos, imatges del Rebost i dibuixos. Obre una còpia i inventa el teu propi final.',demoRead:'Llegeix el conte',demoEdit:'Edita una còpia',demoDownload:'Descarrega .elpx'},
+  es: {demoLabel:'UN CUENTO DE EJEMPLO · EN VALENCIANO',demoDescription:'Descubre qué puedes crear con textos, imágenes de Rebost y dibujos. Abre una copia e inventa tu propio final.',demoRead:'Leer el cuento',demoEdit:'Editar una copia',demoDownload:'Descargar .elpx'},
+  en: {demoLabel:'A SAMPLE STORY · IN VALENCIAN',demoDescription:'See what you can create with text, Rebost images and drawings. Open a copy and invent your own ending.',demoRead:'Read the story',demoEdit:'Edit a copy',demoDownload:'Download .elpx'},
+})) Object.assign(messages[lang], values);

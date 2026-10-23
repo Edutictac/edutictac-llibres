@@ -10,6 +10,29 @@ el Banc se utiliza la cuenta docente de EduTicTac; el alumnado entra con código
 y PIN de aula y envía sus libros para la aprobación de su docente.
 Despliegue y comprobaciones en [docs/PRODUCTION.md](docs/PRODUCTION.md).
 
+## Conte de mostra
+
+«La papallona i els colors del bosc» és un llibre en valencià amb cinc pàgines
+de conte i una de crèdits. La portada de Llibres permet llegir-lo, descarregar
+el `.elpx` o editar una còpia que es guarda com un llibre nou al navegador.
+Inclou imatges del catàleg públic Scratch del Rebost, text i una flor dibuixada.
+No necessita compte ni es publica automàticament en el Banc.
+
+Els recursos, les fonts originals i les llicències s'incorporen a l'editable.
+El conte i les adaptacions es distribuïxen amb CC BY-SA 2.0; el codi de Llibres
+manté la seua llicència AGPL. La procedència de les cinc imatges està també en
+`public/examples/la-papallona/provenance.json`.
+
+Per a regenerar-lo amb l'adaptador real eXe i imatges públiques del Rebost:
+
+```sh
+python scripts/build-demo.py --origin https://llibres.edutictac.es
+```
+
+Utilitza un navegador efímer, sense compte, i bloqueja les escriptures de xarxa.
+No crea dades en el servidor. Les proves de `tests/test_demo.py` comproven els
+crèdits incorporats i que l'edició d'una còpia conserva els llibres existents.
+
 ## Iniciar
 
 ```sh

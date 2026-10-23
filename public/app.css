@@ -10,6 +10,23 @@
   color: var(--ink);
   background: var(--paper);
 }
+.demo-book {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 24px;
+  margin: 0 0 48px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #f0f3e8;
+}
+.demo-book img { width: 280px; max-width: 100%; height: auto; border-radius: 10px; }
+.demo-book > a { flex-shrink: 0; }
+.demo-book h2 { margin: 0; }
+.demo-link { display: inline-block; padding: 10px 0; color: var(--green); font-weight: 600; }
+@media (max-width: 720px) {
+  .demo-book { flex-direction: column; align-items: stretch; gap: 16px; }
+}
 * {
   box-sizing: border-box;
 }

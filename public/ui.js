@@ -3931,10 +3931,55 @@ var Xa = { class: "book-card" }, Za = ["disabled"], Qa = ["disabled", "aria-labe
 			sandbox: "allow-downloads"
 		}, null, 8, cc)], 544)], 64));
 	}
-}, uc = { class: "masthead" }, dc = ["disabled"], fc = ["hidden"], pc = { class: "hero" }, mc = { class: "eyebrow" }, hc = { class: "intro" }, gc = { class: "actions" }, _c = ["hidden"], vc = ["hidden"], yc = { class: "storage-note" }, bc = {
+}, uc = {
+	id: "demo-book",
+	class: "demo-book",
+	"aria-labelledby": "demo-heading"
+}, dc = ["aria-label"], fc = { class: "eyebrow" }, pc = { class: "actions" }, mc = {
+	id: "read-demo",
+	class: "demo-link",
+	href: "/examples/la-papallona/"
+}, hc = ["disabled"], gc = {
+	id: "download-demo",
+	class: "demo-link",
+	href: "/examples/la-papallona/la-papallona.elpx",
+	download: ""
+}, _c = {
+	__name: "DemoBook",
+	props: {
+		locale: String,
+		busy: Boolean
+	},
+	emits: ["edit"],
+	setup(e) {
+		return (t, n) => (Y(), X("section", uc, [Z("a", {
+			href: "/examples/la-papallona/",
+			"aria-label": H(a)[e.locale].demoRead
+		}, [...n[1] ||= [Z("img", {
+			src: "/examples/la-papallona/cover.png",
+			alt: "La papallona i els colors del bosc",
+			width: "320",
+			height: "180",
+			loading: "lazy"
+		}, null, -1)]], 8, dc), Z("div", null, [
+			Z("p", fc, P(H(a)[e.locale].demoLabel), 1),
+			n[2] ||= Z("h2", { id: "demo-heading" }, "La papallona i els colors del bosc", -1),
+			Z("p", null, P(H(a)[e.locale].demoDescription), 1),
+			Z("div", pc, [
+				Z("a", mc, P(H(a)[e.locale].demoRead), 1),
+				Z("button", {
+					id: "edit-demo",
+					disabled: e.busy,
+					onClick: n[0] ||= (e) => t.$emit("edit")
+				}, P(H(a)[e.locale].demoEdit), 9, hc),
+				Z("a", gc, P(H(a)[e.locale].demoDownload), 1)
+			])
+		])]));
+	}
+}, vc = { class: "masthead" }, yc = ["disabled"], bc = ["hidden"], xc = { class: "hero" }, Sc = { class: "eyebrow" }, Cc = { class: "intro" }, wc = { class: "actions" }, Tc = ["hidden"], Ec = ["hidden"], Dc = { class: "storage-note" }, Oc = {
 	class: "hero-art",
 	"aria-hidden": "true"
-}, xc = { class: "book-cover" }, Sc = { href: "/about.html" }, Cc = ["hidden"], wc = ["hidden"], Tc = { id: "busy-text" }, Ec = {
+}, kc = { class: "book-cover" }, Ac = { href: "/about.html" }, jc = ["hidden"], Mc = ["hidden"], Nc = { id: "busy-text" }, Pc = {
 	__name: "App",
 	setup(e) {
 		let t = /* @__PURE__ */ V(null), n = /* @__PURE__ */ V(null), r = /* @__PURE__ */ V(null), i = /* @__PURE__ */ V(null), a = /* @__PURE__ */ V(null), o = /* @__PURE__ */ V(null), s = /* @__PURE__ */ V(null), c = /* @__PURE__ */ V(null), l = /* @__PURE__ */ V(null), u = /* @__PURE__ */ V(null), d = Ya({
@@ -3952,62 +3997,76 @@ var Xa = { class: "book-card" }, Za = ["disabled"], Qa = ["disabled", "aria-labe
 			let t = e.target.files[0];
 			e.target.value = "", t && d.action(() => d.image(t));
 		}
-		return Xn(d.start), Zn(d.dispose), (e, g) => (Y(), X(q, null, [
-			Z("header", uc, [g[9] ||= Z("a", {
+		function g() {
+			d.action(async () => {
+				let e = await fetch("/examples/la-papallona/la-papallona.elpx");
+				if (!e.ok) throw Error("invalid");
+				let t = await e.arrayBuffer();
+				if (t.byteLength > 26214400) throw Error("invalid");
+				d.language("va", !1), await d.importFile(new File([t], "La papallona i els colors del bosc.elpx", { type: "application/zip" }));
+			}, "loading");
+		}
+		return Xn(d.start), Zn(d.dispose), (e, _) => (Y(), X(q, null, [
+			Z("header", vc, [_[9] ||= Z("a", {
 				class: "brand",
 				href: "/"
 			}, [di("◧ EduTicTac "), Z("b", null, "Llibres")], -1), G(Z("select", {
 				id: "language",
-				"onUpdate:modelValue": g[0] ||= (e) => H(f).locale = e,
+				"onUpdate:modelValue": _[0] ||= (e) => H(f).locale = e,
 				disabled: H(f).active,
-				onChange: g[1] ||= (e) => H(d).language(H(f).locale),
+				onChange: _[1] ||= (e) => H(d).language(H(f).locale),
 				"aria-label": "Idioma"
-			}, [...g[8] ||= [
+			}, [..._[8] ||= [
 				Z("option", { value: "es" }, "Castellano", -1),
 				Z("option", { value: "ca" }, "Català", -1),
 				Z("option", { value: "va" }, "Valencià", -1),
 				Z("option", { value: "en" }, "English", -1)
-			]], 40, dc), [[Na, H(f).locale]])]),
+			]], 40, yc), [[Na, H(f).locale]])]),
 			Z("main", {
 				id: "home",
 				hidden: H(f).active
 			}, [
-				Z("section", pc, [Z("div", null, [
-					Z("p", mc, P(H(p)("eyebrow")), 1),
+				Z("section", xc, [Z("div", null, [
+					Z("p", Sc, P(H(p)("eyebrow")), 1),
 					Z("h1", null, P(H(p)("headline")), 1),
-					Z("p", hc, P(H(p)("intro")), 1),
-					Z("div", gc, [
+					Z("p", Cc, P(H(p)("intro")), 1),
+					Z("div", wc, [
 						Z("button", {
 							id: "new-book",
-							onClick: g[2] ||= (e) => r.value.open(),
+							onClick: _[2] ||= (e) => r.value.open(),
 							class: "primary"
 						}, P(H(p)("new")), 1),
 						Z("button", {
 							id: "open-book",
-							onClick: g[3] ||= (e) => u.value.click()
+							onClick: _[3] ||= (e) => u.value.click()
 						}, P(H(p)("open")), 1),
 						Z("button", {
 							id: "open-shared",
-							onClick: g[4] ||= (e) => c.value.open(),
+							onClick: _[4] ||= (e) => c.value.open(),
 							hidden: !H(f).publicationEnabled
-						}, P(H(p)("sharedStories")), 9, _c),
+						}, P(H(p)("sharedStories")), 9, Tc),
 						Z("button", {
 							id: "open-reviews",
-							onClick: g[5] ||= (e) => n.value.open(),
+							onClick: _[5] ||= (e) => n.value.open(),
 							hidden: !H(f).publicationEnabled
-						}, P(H(p)("reviewBooks")), 9, vc)
+						}, P(H(p)("reviewBooks")), 9, Ec)
 					]),
-					Z("p", yc, P(H(p)("local")), 1)
-				]), Z("div", bc, [Z("div", xc, [
+					Z("p", Dc, P(H(p)("local")), 1)
+				]), Z("div", Oc, [Z("div", kc, [
 					Z("span", null, [
 						di(P(H(p)("coverTop")), 1),
-						g[10] ||= Z("br", null, null, -1),
+						_[10] ||= Z("br", null, null, -1),
 						di(P(H(p)("coverBottom")), 1)
 					]),
-					g[11] ||= Z("div", { class: "sun" }, null, -1),
-					g[12] ||= Z("div", { class: "hill" }, null, -1),
+					_[11] ||= Z("div", { class: "sun" }, null, -1),
+					_[12] ||= Z("div", { class: "hill" }, null, -1),
 					Z("i", null, P(H(p)("storySubtitle")), 1)
-				]), g[13] ||= Z("span", { class: "star" }, "✳", -1)])]),
+				]), _[13] ||= Z("span", { class: "star" }, "✳", -1)])]),
+				Q(_c, {
+					locale: H(f).locale,
+					busy: H(f).busy,
+					onEdit: g
+				}, null, 8, ["locale", "busy"]),
 				Q(ao, {
 					ref_key: "shelf",
 					ref: t,
@@ -4019,13 +4078,13 @@ var Xa = { class: "book-card" }, Za = ["disabled"], Qa = ["disabled", "aria-labe
 					"action",
 					"open-book"
 				]),
-				Z("footer", null, [Z("span", null, P(H(p)("footer")), 1), Z("a", Sc, P(H(p)("about")), 1)])
-			], 8, fc),
+				Z("footer", null, [Z("span", null, P(H(p)("footer")), 1), Z("a", Ac, P(H(p)("about")), 1)])
+			], 8, bc),
 			Q(gs, {
 				ref_key: "workshop",
 				ref: i,
 				core: H(d),
-				onPublish: g[6] ||= (e) => s.value.open()
+				onPublish: _[6] ||= (e) => s.value.open()
 			}, null, 8, ["core"]),
 			Q(Uo, {
 				ref_key: "createDialog",
@@ -4042,7 +4101,7 @@ var Xa = { class: "book-card" }, Za = ["disabled"], Qa = ["disabled", "aria-labe
 				ref_key: "picker",
 				ref: o,
 				core: H(d),
-				onDevice: g[7] ||= (e) => l.value.click()
+				onDevice: _[7] ||= (e) => l.value.click()
 			}, null, 8, ["core"]),
 			Q(Xs, {
 				ref_key: "publication",
@@ -4089,17 +4148,17 @@ var Xa = { class: "book-card" }, Za = ["disabled"], Qa = ["disabled", "aria-labe
 				"aria-live": "polite",
 				class: Ce({ error: H(f).noticeError }),
 				hidden: !H(f).notice
-			}, P(H(f).notice), 11, Cc),
+			}, P(H(f).notice), 11, jc),
 			Z("div", {
 				id: "busy",
 				hidden: !H(f).busy,
 				role: "status"
-			}, [g[14] ||= Z("span", { class: "spinner" }, null, -1), Z("span", Tc, P(H(p)(H(f).busyKey)), 1)], 8, wc)
+			}, [_[14] ||= Z("span", { class: "spinner" }, null, -1), Z("span", Nc, P(H(p)(H(f).busyKey)), 1)], 8, Mc)
 		], 64));
 	}
 };
 // src/ui.js
-function Dc() {
-	return Wa(Ec).mount("#app");
+function Fc() {
+	return Wa(Pc).mount("#app");
 }
-export { Dc as mountLlibres };
+export { Fc as mountLlibres };
