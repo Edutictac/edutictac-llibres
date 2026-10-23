@@ -50,8 +50,9 @@ Les comprovacions d'escriptura utilitzen bases i identitats temporals.
 «La granota i la idea brillant», en valencià, està en
 `public/examples/la-granota/`: portada, pàgines de 2/3/4 vinyetes i crèdits.
 Les quatre imatges del Rebost incorporen PNG, font original, autoria i llicència.
-L'HTML de lectura és estàtic i no conté JavaScript; la còpia editable té un
-identificador nou en IndexedDB. El conte i el còmic anteriors no es substituïxen.
+Les mostres s'obrin en el mateix lector Vue del taller, amb anterior/següent i
+SVG sanejat; llegir-les no inicia eXe ni crea llibres en IndexedDB. La còpia
+editable té un identificador nou. El conte i el còmic anteriors no es substituïxen.
 
 ```sh
 python scripts/build-demo.py --comic --origin http://127.0.0.1:8098 \

@@ -9,6 +9,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 from playwright.sync_api import sync_playwright
+from example_reader import write_example_reader
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -57,7 +58,7 @@ def build(origin, comic=False, rebost_origin=None):
 <nav><a href="/?lang=va">Torna a Llibres</a><a href="{slug}.elpx" download>Descarrega el llibre editable (.elpx)</a></nav>
 <p>Llig el conte i, si vols, obri una còpia en Llibres per a canviar els textos, moure les imatges o dibuixar un altre final.</p></header>
 <main>{sections}</main><footer><p>Text i dibuix: EduTicTac. Imatges: catàleg públic Scratch del Rebost; autoria i origen als crèdits del llibre.</p><p>Conte i adaptacions: CC BY-SA 2.0. La font original de cada imatge i la llicència completa s’inclouen en el fitxer editable.</p></footer></html>'''
-    (output/'index.html').write_text(document)
+    write_example_reader(output,slug,title,slides)
     with sync_playwright() as playwright:
         browser=playwright.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox'])
         page=browser.new_page(viewport={'width':1304,'height':900})

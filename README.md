@@ -18,6 +18,10 @@ el `.elpx` o editar una còpia que es guarda com un llibre nou al navegador.
 Inclou imatges del catàleg públic Scratch del Rebost, text i una flor dibuixada.
 No necessita compte ni es publica automàticament en el Banc.
 
+La lectura de les mostres utilitza el mateix lector per pàgines que el botó
+«Llig» del taller, sense iniciar l'editor ni guardar una còpia. Els enllaços
+antics dels exemples continuen obrint eixe lector.
+
 Els recursos, les fonts originals i les llicències s'incorporen a l'editable.
 El conte i les adaptacions es distribuïxen amb CC BY-SA 2.0; el codi de Llibres
 manté la seua llicència AGPL. La procedència de les cinc imatges està també en

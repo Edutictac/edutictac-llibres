@@ -1,11 +1,14 @@
 <script setup>
 import { ref, shallowRef } from "vue";
+const emit = defineEmits(['example-close']);
 const props = defineProps({ core: Object });
 const t = props.core.t,
   dialog = ref(null),
   title = ref(""),
   slides = shallowRef([]),
-  index = ref(0);
+  index = ref(0),
+  preview = ref(false),
+  download = ref('');
 function renderSlide(el, { value: slide }) {
   el.replaceChildren();
   if (!slide?.svg) {
@@ -27,14 +30,17 @@ function renderSlide(el, { value: slide }) {
   }
 }
 const vSafeSlide = { mounted: renderSlide, updated: renderSlide };
-function open(name, pages) {
+function open(name, pages, options = {}) {
   title.value = name;
   slides.value = pages;
   index.value = 0;
+  preview.value = options.preview === true;
+  download.value = options.download || '';
   dialog.value.showModal();
 }
 function restore() {
-  props.core.resume();
+  if (preview.value) emit('example-close');
+  else props.core.resume();
 }
 function close() {
   dialog.value.close();
@@ -51,10 +57,11 @@ defineExpose({ open });
     @cancel="restore"
   >
     <div class="reader-toolbar">
-      <button id="close-reader" @click="close">{{ t("returnEdit") }}</button
+      <button id="close-reader" @click="close">{{ t(preview ? 'close' : "returnEdit") }}</button
       ><strong id="reader-title">{{ title }}</strong
       ><button
         id="export-html"
+        v-if="!preview"
         @click="
           core.action(() => core.exportBook('html5', '.zip'), 'exporting')
         "
@@ -62,12 +69,14 @@ defineExpose({ open });
         {{ t("html") }}</button
       ><button
         id="export-epub"
+        v-if="!preview"
         @click="
           core.action(() => core.exportBook('epub3', '.epub'), 'exporting')
         "
       >
         EPUB
       </button>
+      <a v-if="preview" id="reader-download-example" :href="download" download>{{ t('demoDownload') }}</a>
     </div>
     <div
       id="reader-page"

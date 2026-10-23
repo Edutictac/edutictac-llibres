@@ -23,6 +23,7 @@ export default defineConfig({
         "/adapter.js",
         "/import.js",
         "/rebost.js",
+        "/examples.js",
       ],
     },
     minify: true,

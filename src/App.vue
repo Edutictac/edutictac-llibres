@@ -11,6 +11,7 @@ import PublicationDialog from "./PublicationDialog.vue";
 import SharedStories from "./SharedStories.vue";
 import DemoBook from "./DemoBook.vue";
 import BubbleDialog from './BubbleDialog.vue';
+import {loadExample, exampleSlugs} from '/examples.js';
 const shelf = ref(null),
   reviews = ref(null),
   createDialog = ref(null),
@@ -52,7 +53,24 @@ function openDemo(comic=false) {
     await core.importFile(new File([bytes], slug+'.elpx', {type:'application/zip'}));
   }, 'loading');
 }
-onMounted(core.start);
+function readExample(slug) {
+  return core.action(async () => {
+    const value=await loadExample(slug);
+    core.notice('');
+    const url=new URL(location.href);url.searchParams.set('example',slug);
+    history.replaceState(null,'',url);
+    reader.value.open(value.title,value.slides,{preview:true,download:'/examples/'+slug+'/'+slug+'.elpx'});
+  },'loading');
+}
+function closeExample() {
+  const url=new URL(location.href);url.searchParams.delete('example');
+  history.replaceState(null,'',url);
+}
+onMounted(async () => {
+  await core.start();
+  const slug=new URL(location.href).searchParams.get('example');
+  if (exampleSlugs.includes(slug)) await readExample(slug);
+});
 onUnmounted(core.dispose);
 </script>
 <template>
@@ -110,8 +128,8 @@ onUnmounted(core.dispose);
         <span class="star">✳</span>
       </div>
     </section>
-    <DemoBook :locale="state.locale" :busy="state.busy" @edit="openDemo(false)" />
-    <DemoBook comic :locale="state.locale" :busy="state.busy" @edit="openDemo(true)" />
+    <DemoBook :locale="state.locale" :busy="state.busy" @edit="openDemo(false)" @read="readExample('la-papallona')" />
+    <DemoBook comic :locale="state.locale" :busy="state.busy" @edit="openDemo(true)" @read="readExample('la-granota')" />
     <Bookshelf
       ref="shelf"
       :locale="state.locale"
@@ -127,7 +145,7 @@ onUnmounted(core.dispose);
   <WorkshopView ref="workshop" :core="core" @publish="publication.open()" @bubble="editing => bubble.open(editing)" />
   <BubbleDialog ref="bubble" :core="core" />
   <CreateDialog ref="createDialog" :locale="state.locale" :core="core" />
-  <ReaderDialog ref="reader" :core="core" />
+  <ReaderDialog ref="reader" :core="core" @example-close="closeExample" />
   <ImagePicker ref="picker" :core="core" @device="imageInput.click()" />
   <PublicationDialog ref="publication" :core="core" />
   <SharedStories ref="shared" :core="core" />
