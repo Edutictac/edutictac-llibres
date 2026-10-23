@@ -296,3 +296,19 @@ Només es recrea Llibres. Configuració del host, certificats, API i altres serv
 conservats. Còpia i resultats en `/opt/edutictac-llibres/reader-20261023/`; el
 Compose anterior i la font pública anterior permeten retirar el canvi sense
 restaurar dades. Candidat privat i túnel retirats; cap compte personal utilitzat.
+
+## Accions simplificades i idioma del navegador — 23-10-2026
+
+Les mostres presenten tres botons iguals: Llig, Edita i Descarrega, traduïts als
+quatre idiomes. La interfície oculta l’extensió tècnica dels llibres; els fitxers
+conserven el format editable. Primera visita: s’utilitza el primer idioma del
+navegador amb traducció disponible, inclòs `ca-ES-valencia`. URL i preferències
+explícites anteriors mantenen prioritat. Castellà si cap idioma és compatible.
+
+Imatge actual:
+`sha256:4b5d75c181c0c5451e2c4915574fb1e78e92e00ae2333da22e7d36573d476c55`.
+13 proves locals d’idioma aprovades. Candidat privat comprovat abans d’activar;
+només Llibres recreat, sense canvis a API, comptes, dades o altres serveis.
+Còpies per a reversió: `/opt/edutictac-llibres/labels-20261023/` i
+`/opt/edutictac-llibres/language-20261023/`. Conservar Compose i font anteriors;
+no restaurar bases de dades per a revertir estos canvis de la interfície.
