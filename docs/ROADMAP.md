@@ -36,6 +36,20 @@ implementados están en [RESOURCE_PUBLICATION.md](RESOURCE_PUBLICATION.md).
 - Narraciones y audio (fuera de esta primera publicación).
 - Moderación y política editorial del banco antes de abrir publicaciones en Internet.
 
+## Rendimiento al abrir un libro
+
+Diagnóstico pendiente de abordar, 23-10-2026. Al abrir un libro guardado el
+editor se inicializa varias veces; es anterior al modo cómic y está en el
+guardado y la sincronización de créditos que se ejecutan al abrir y al cambiar
+de página.
+
+- [ ] Abrir con una sola carga de página y una sola inicialización del editor.
+- [ ] No ejecutar `syncCredits()` al seleccionar, mover o renombrar páginas.
+- [ ] Migrar créditos heredados una sola vez y persistirlo.
+
+Detalle, causas, plan por fases y criterios de aceptación en
+[OPEN_PERFORMANCE_DIAGNOSIS.md](OPEN_PERFORMANCE_DIAGNOSIS.md).
+
 ## Publicación del alumnado con aprobación docente
 
 Petición expresa del usuario, 21-10-2026. Implementado como conexión opcional.
