@@ -2843,10 +2843,10 @@ function Za(t) {
 	}
 	async function _e() {
 		b(n.locale), window.addEventListener("pageshow", ve), window.addEventListener("focus", ve), window.addEventListener("beforeunload", ge);
-		for (let [e, t] of [["publication", "publicationEnabled"], ["rebost", "rebostEnabled"]]) fetch("/" + e + "-status", { cache: "no-store" }).then(async (e) => {
-			if (e.ok) {
-				let r = (await e.json()).enabled;
-				n[t] = r === !0 || t === "publication" && Array.isArray(r) && r.includes("recursos");
+		for (let [e, t] of [["publication", "publicationEnabled"], ["rebost", "rebostEnabled"]]) fetch("/" + e + "-status", { cache: "no-store" }).then(async (r) => {
+			if (r.ok) {
+				let i = (await r.json()).enabled;
+				n[t] = i === !0 || e === "publication" && Array.isArray(i) && i.includes("recursos");
 			}
 		}).catch(() => {});
 		try {

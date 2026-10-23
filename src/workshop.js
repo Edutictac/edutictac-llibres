@@ -364,7 +364,7 @@ export function createWorkshop(view) {
         .then(async (r) => {
           if (r.ok) {
             const enabled = (await r.json()).enabled;
-            state[field] = enabled === true || (field === "publication" && Array.isArray(enabled) && enabled.includes("recursos"));
+            state[field] = enabled === true || (path === "publication" && Array.isArray(enabled) && enabled.includes("recursos"));
           }
         })
         .catch(() => {});
