@@ -362,7 +362,10 @@ export function createWorkshop(view) {
     ])
       fetch("/" + path + "-status", { cache: "no-store" })
         .then(async (r) => {
-          if (r.ok) state[field] = (await r.json()).enabled === true;
+          if (r.ok) {
+            const enabled = (await r.json()).enabled;
+            state[field] = enabled === true || (field === "publication" && Array.isArray(enabled) && enabled.includes("recursos"));
+          }
         })
         .catch(() => {});
     try {

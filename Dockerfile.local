@@ -1,0 +1,10 @@
+FROM nginxinc/nginx-unprivileged:1.27-alpine
+LABEL org.opencontainers.image.title="EduTicTac Llibres for Commons" \
+      org.opencontainers.image.licenses="AGPL-3.0-or-later" \
+      org.opencontainers.image.source="https://git.edutictac.es/Edutictac/edutictac-llibres"
+COPY public /usr/share/nginx/html
+COPY vendor/exelearning/static /opt/exelearning
+COPY LICENSE upstream.json /usr/share/nginx/html/licenses/
+COPY nginx.commons.conf /etc/nginx/llibres-local.template
+COPY scripts/start-commons.sh /usr/local/bin/start-commons.sh
+ENTRYPOINT ["/bin/sh", "/usr/local/bin/start-commons.sh"]
