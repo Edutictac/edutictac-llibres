@@ -312,3 +312,17 @@ només Llibres recreat, sense canvis a API, comptes, dades o altres serveis.
 Còpies per a reversió: `/opt/edutictac-llibres/labels-20261023/` i
 `/opt/edutictac-llibres/language-20261023/`. Conservar Compose i font anteriors;
 no restaurar bases de dades per a revertir estos canvis de la interfície.
+
+## Pàgina informativa traduïda — 23-10-2026
+
+`/about.html` mostra una única versió ES/VA/CA/EN segons la preferència de
+Llibres. Resolució compartida amb el taller en `locale.js`; conserva enllaços
+legals i de font i torna a la portada amb l’idioma elegit. Informació de Rebost
+i publicació actualitzada. 13 proves locals d’idiomes aprovades i comprovació
+de navegador de la pàgina en els quatre idiomes.
+
+Imatge:
+`sha256:3574e96a7d9ff8f56212620be9a14fb469cb46b27d7c9207b3090b4f1c25d85e`.
+Candidat privat comprovat abans d’activar. Còpia i reversió en
+`/opt/edutictac-llibres/about-20261023/`. Solament Llibres recreat; altres
+serveis, dades i configuració del host conservats.

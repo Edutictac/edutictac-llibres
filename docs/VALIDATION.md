@@ -392,3 +392,16 @@ aprobados (19 en la primera ejecución y el restante tras corregir la simulació
 de cookie compartida del test). La prueba de cambio entre aplicaciones ahora
 reemplaza la cookie real de dominio `.edutictac.es`, sin crear otra homónima
 limitada al host. No se modifica el comportamiento de producción para este ajuste.
+
+## Acerca de en un único idioma — 23-10-2026
+
+La página informativa aplica la misma resolución de idioma que el taller,
+extraída a `public/locale.js`: URL, preferencia compartida, preferencia local,
+navegador y castellano como último recurso. Texto y título traducidos a ES,
+VA, CA y EN; enlaces de licencias y fuente conservados. El enlace de vuelta
+mantiene el idioma. Se actualiza también al volver a enfocar la página.
+
+13 pruebas de idiomas del editor aprobadas tras compartir el módulo, incluida
+creación y guardado. Comprobación en navegador de los cuatro idiomas, vuelta al
+editor, idioma regional del navegador y prioridad del parámetro URL. Revisión
+visual en valenciano sin párrafos duplicados ni textos bilingües.
