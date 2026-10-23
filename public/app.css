@@ -28,7 +28,24 @@
 .comic-toolbar span { color:var(--muted); font-size:14px; }
 #bubble-dialog { width:min(560px,94vw); }
 #bubble-dialog label, #bubble-dialog textarea { display:block; width:100%; margin:12px 0 6px; }
-.demo-link { display: inline-block; padding: 10px 0; color: var(--green); font-weight: 600; }
+.demo-link, .demo-book .actions > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 132px;
+  max-width: 100%;
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink);
+  background: white;
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.5;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.demo-link:hover, .demo-book .actions > button:hover { border-color: var(--green); background: #f3f7f0; }
 @media (max-width: 720px) {
   .demo-book { flex-direction: column; align-items: stretch; gap: 16px; }
 }

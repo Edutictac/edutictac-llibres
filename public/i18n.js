@@ -82,7 +82,7 @@ export const messages = {
     publishDescription: "Descripción",
     publishLicense: "Licencia del libro",
     publishEditable:
-      "Ofrecer el .elpx editable, incluidos los recursos del proyecto",
+      "Permitir que otras personas descarguen y editen una copia del libro",
     publishConfirm:
       "He revisado el libro, sus imágenes y créditos, y quiero publicarlo para que otras personas lo lean.",
     publicationActive: "El libro está publicado. Puedes compartir su enlace.",
@@ -135,7 +135,7 @@ export const messages = {
     intro:
       "Un pequeño taller para crear grandes libros. Elige una idea y dale vida con tus palabras e imágenes.",
     new: "＋ Crear un libro",
-    open: "Abrir un archivo .elpx",
+    open: "Abrir un libro",
     local:
       "Tus libros se guardan en este navegador. Descarga una copia para conservarlos o llevarlos a otro dispositivo.",
     myBooks: "Mis libros",
@@ -143,7 +143,7 @@ export const messages = {
     about: "Sobre Llibres y licencias",
     back: "← Mis libros",
     save: "Guardar",
-    download: "Descargar .elpx",
+    download: "Descargar",
     read: "▷ Leer",
     pages: "Páginas",
     page: "Página",
@@ -280,7 +280,7 @@ export const messages = {
     publishDescription: "Descripció",
     publishLicense: "Llicència del llibre",
     publishEditable:
-      "Oferix l’editable .elpx, inclosos els recursos del projecte",
+      "Permet que altres persones descarreguen i editen una còpia del llibre",
     publishConfirm:
       "He revisat el llibre, les imatges i els crèdits, i vull publicar-lo perquè altres persones el lligen.",
     publicationActive: "El llibre està publicat. Pots compartir-ne l’enllaç.",
@@ -332,7 +332,7 @@ export const messages = {
     intro:
       "Un xicotet taller per a crear grans llibres. Tria una idea i dona-li vida amb les teues paraules i imatges.",
     new: "＋ Crea un llibre",
-    open: "Obri un arxiu .elpx",
+    open: "Obri un llibre",
     local:
       "Els teus llibres es guarden en este navegador. Descarrega una còpia per a conservar-los o portar-los a un altre dispositiu.",
     myBooks: "Els meus llibres",
@@ -340,7 +340,7 @@ export const messages = {
     about: "Sobre Llibres i llicències",
     back: "← Els meus llibres",
     save: "Guarda",
-    download: "Descarrega .elpx",
+    download: "Descarrega",
     read: "▷ Llig",
     pages: "Pàgines",
     page: "Pàgina",
@@ -416,7 +416,8 @@ messages.ca = {
   "reviewShowHistory": "Activa Mostra també els revisats per a veure les decisions anteriors.",
   "sharedEmpty": "Encara no hi ha històries publicades que coincideixin amb aquesta cerca.",
   "publicationLogin": "Entra amb el teu compte docent per a publicar, o amb el codi i PIN de la teva aula per a enviar el llibre a revisió. No cal compte per a llegir històries.",
-  "publishEditable": "Ofereix l’editable .elpx, inclosos els recursos del projecte",
+  "open": "Obre un llibre",
+  "publishEditable": "Permet que altres persones descarreguin i editin una còpia del llibre",
   "publishConfirm": "He revisat el llibre, les imatges i els crèdits, i vull publicar-lo perquè altres persones el llegeixin.",
   "openPublication": "Llegeix la publicació",
   "withdrawConfirm": "Vols retirar aquest llibre del banc i d’Històries compartides? L’esborrany continuarà en aquest navegador.",
@@ -503,7 +504,7 @@ messages.en = {
   "publishAuthor": "Author or pen name",
   "publishDescription": "Description",
   "publishLicense": "Book licence",
-  "publishEditable": "Offer the editable .elpx file, including project resources",
+  "publishEditable": "Let others download and edit a copy of the book",
   "publishConfirm": "I have checked the book, its images and credits, and want to publish it for others to read.",
   "publicationActive": "The book is published. You can share its link.",
   "openPublication": "Read publication",
@@ -540,14 +541,14 @@ messages.en = {
   "headline": "Your next story starts here.",
   "intro": "A small workshop for creating great books. Choose an idea and bring it to life with your words and images.",
   "new": "＋ Create a book",
-  "open": "Open an .elpx file",
+  "open": "Open a book",
   "local": "Your books are saved in this browser. Download a copy to keep them or take them to another device.",
   "myBooks": "My books",
   "footer": "Made for imagination, with free software.",
   "about": "About Llibres and licences",
   "back": "← My books",
   "save": "Save",
-  "download": "Download .elpx",
+  "download": "Download",
   "read": "▷ Read",
   "pages": "Pages",
   "page": "Page",
@@ -605,10 +606,10 @@ for (const [lang, values] of Object.entries({
 })) Object.assign(messages[lang], values);
 
 for (const [lang, values] of Object.entries({
-  va: {demoLabel:'UN CONTE DE MOSTRA · EN VALENCIÀ',demoDescription:'Descobrix què pots crear amb textos, imatges del Rebost i dibuixos. Obri una còpia i inventa el teu propi final.',demoRead:'Llig el conte',demoEdit:'Edita una còpia',demoDownload:'Descarrega .elpx'},
-  ca: {demoLabel:'UN CONTE DE MOSTRA · EN VALENCIÀ',demoDescription:'Descobreix què pots crear amb textos, imatges del Rebost i dibuixos. Obre una còpia i inventa el teu propi final.',demoRead:'Llegeix el conte',demoEdit:'Edita una còpia',demoDownload:'Descarrega .elpx'},
-  es: {demoLabel:'UN CUENTO DE EJEMPLO · EN VALENCIANO',demoDescription:'Descubre qué puedes crear con textos, imágenes de Rebost y dibujos. Abre una copia e inventa tu propio final.',demoRead:'Leer el cuento',demoEdit:'Editar una copia',demoDownload:'Descargar .elpx'},
-  en: {demoLabel:'A SAMPLE STORY · IN VALENCIAN',demoDescription:'See what you can create with text, Rebost images and drawings. Open a copy and invent your own ending.',demoRead:'Read the story',demoEdit:'Edit a copy',demoDownload:'Download .elpx'},
+  va: {demoLabel:'UN CONTE DE MOSTRA · EN VALENCIÀ',demoDescription:'Descobrix què pots crear amb textos, imatges del Rebost i dibuixos. Obri una còpia i inventa el teu propi final.',demoRead:'Llig',demoEdit:'Edita',demoDownload:'Descarrega'},
+  ca: {demoLabel:'UN CONTE DE MOSTRA · EN VALENCIÀ',demoDescription:'Descobreix què pots crear amb textos, imatges del Rebost i dibuixos. Obre una còpia i inventa el teu propi final.',demoRead:'Llegeix',demoEdit:'Edita',demoDownload:'Descarrega'},
+  es: {demoLabel:'UN CUENTO DE EJEMPLO · EN VALENCIANO',demoDescription:'Descubre qué puedes crear con textos, imágenes de Rebost y dibujos. Abre una copia e inventa tu propio final.',demoRead:'Leer',demoEdit:'Editar',demoDownload:'Descargar'},
+  en: {demoLabel:'A SAMPLE STORY · IN VALENCIAN',demoDescription:'See what you can create with text, Rebost images and drawings. Open a copy and invent your own ending.',demoRead:'Read',demoEdit:'Edit',demoDownload:'Download'},
 })) Object.assign(messages[lang], values);
 
 for (const [lang, values] of Object.entries({
