@@ -4,7 +4,7 @@ from urllib.parse import parse_qs, urlsplit
 
 import pytest
 from playwright.sync_api import expect
-from test_workshop import BASE, browser, idle
+from test_workshop import BASE, browser, idle, choose_language
 
 
 @pytest.fixture
@@ -59,7 +59,7 @@ def test_pagination_filter_translation_and_untrusted_text(queue):
     page.check('#reviews-all'); idle(page)
     expect(page.locator('.review-open')).to_have_count(1)
     assert state['calls'][-1] == {'offset': ['0'], 'all': ['1']}
-    page.click('#close-reviews'); page.select_option('#language', 'va')
+    page.click('#close-reviews'); choose_language(page, 'va')
     page.click('#open-reviews'); idle(page)
     expect(page.locator('#reviews-heading')).to_contain_text('Revisa')
     expect(page.locator('#reviews-sign-in')).to_have_attribute('href',

@@ -9,7 +9,7 @@ import pytest
 from PIL import Image, ImageChops, ImageStat
 
 from playwright.sync_api import expect
-from test_workshop import BASE, browser, idle
+from test_workshop import BASE, browser, idle, expect_language
 
 EXAMPLE=Path(__file__).resolve().parents[1]/'public/examples/la-papallona'
 
@@ -54,7 +54,7 @@ def test_read_and_edit_sample_without_replacing_existing_books(browser):
     page.reload();page.click('#edit-demo');idle(page)
     expect(page.locator('#book-title')).to_have_value('La papallona i els colors del bosc')
     expect(page.locator('.page-tab')).to_have_count(6)
-    expect(page.locator('#language')).to_have_value('va')
+    expect_language(page, 'va')
     page.fill('#book-title','El meu final');page.locator('#book-title').dispatch_event('change')
     page.click('#back');idle(page)
     expect(page.locator('#book-count')).to_have_text('2')

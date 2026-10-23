@@ -1,7 +1,7 @@
 """Shelf migration: existing IndexedDB data, deletion and editor round trips."""
 import pytest
 from playwright.sync_api import expect
-from test_workshop import BASE, browser, create, idle
+from test_workshop import BASE, browser, create, idle, choose_language
 
 
 @pytest.fixture
@@ -42,7 +42,7 @@ def test_existing_books_sort_translate_and_delete_with_confirmation(shelf):
         '<img src=x onerror=window.__unsafe=1>', 'La segona història', 'El primer conte'])
     assert page.locator('#books .book-open img').count() == 0
     assert page.evaluate('window.__unsafe') is None
-    page.select_option('#language', 'va')
+    choose_language(page, 'va')
     expect(page.locator('#shelf-heading')).to_have_text('Els meus llibres')
     expect(page.locator('#books .book-card p').first).to_contain_text('2 pàgines')
     expect(page.locator('#books .delete-book').first).to_have_attribute(

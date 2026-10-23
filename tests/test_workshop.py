@@ -23,6 +23,51 @@ def browser():
         browser.close()
 
 
+# Amb Commons, l'idioma es tria dins del xip de compte; sense, amb el selector propi.
+LANGUAGE_READY = ("document.querySelector('#language') || "
+                  "document.querySelector('edutictac-account [data-lang-option]')")
+
+
+def _language_chip(page):
+    page.wait_for_function(LANGUAGE_READY)
+    return None if page.locator('#language').count() else page.locator('edutictac-account')
+
+
+def _open_chip(chip):
+    if not chip.locator('details').evaluate('node => node.open'):
+        chip.locator('summary').click()
+
+
+def choose_language(page, lang):
+    chip = _language_chip(page)
+    if chip is None:
+        page.select_option('#language', lang)
+        return
+    _open_chip(chip)
+    chip.locator(f'[data-lang-option="{lang}"]').click()
+    page.keyboard.press('Escape')
+
+
+def expect_language(page, lang):
+    chip = _language_chip(page)
+    if chip is None:
+        expect(page.locator('#language')).to_have_value(lang)
+    else:
+        expect(chip.locator(f'[data-lang-option="{lang}"]')).to_have_attribute('aria-checked', 'true')
+
+
+def expect_language_locked(page, locked):
+    chip = _language_chip(page)
+    if chip is None:
+        target = expect(page.locator('#language'))
+        target.to_be_disabled() if locked else target.to_be_enabled()
+        return
+    _open_chip(chip)
+    option = expect(chip.locator('[data-lang-option="ca"]'))
+    option.to_be_disabled() if locked else option.to_be_enabled()
+    page.keyboard.press('Escape')
+
+
 def idle(page):
     page.wait_for_function('document.getElementById("busy").hidden', timeout=90000)
     assert page.locator('#notice.error:visible').count() == 0, page.locator('#notice').inner_text()
@@ -30,7 +75,7 @@ def idle(page):
 
 def create(page, lang='es'):
     page.goto(BASE)
-    page.select_option('#language', lang)
+    choose_language(page, lang)
     page.click('#new-book')
     page.fill('#title', 'El bosc i la música')
     page.click('#create-form button[type=submit]')

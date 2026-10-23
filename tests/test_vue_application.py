@@ -3,13 +3,13 @@ from urllib.parse import parse_qs, urlsplit
 
 import pytest
 from playwright.sync_api import expect
-from test_workshop import BASE, browser, idle
+from test_workshop import BASE, browser, idle, choose_language, expect_language_locked
 
 
 @pytest.mark.parametrize(('template', 'pages'), [('album', 3), ('blank', 1)])
 def test_create_templates_page_controls_and_reader_escape(browser, template, pages):
     context = browser.new_context(viewport={'width': 1440, 'height': 1000})
-    page = context.new_page(); page.goto(BASE); page.select_option('#language', 'va')
+    page = context.new_page(); page.goto(BASE); choose_language(page, 'va')
     page.click('#new-book'); expect(page.locator('#title')).to_be_focused()
     page.fill('#title', '   '); page.click('#create-form button[type=submit]')
     expect(page.locator('#create-dialog')).to_be_visible()
@@ -18,7 +18,7 @@ def test_create_templates_page_controls_and_reader_escape(browser, template, pag
     page.click('#create-form button[type=submit]'); idle(page)
     expect(page.locator('.page-tab')).to_have_count(pages)
     expect(page.locator('#page-count')).to_have_text(str(pages))
-    expect(page.locator('#language')).to_be_disabled()
+    expect_language_locked(page, True)
     expect(page.locator('#move-up')).to_be_disabled()
     if template == 'blank': expect(page.locator('#delete-page')).to_be_disabled()
     page.click('#add-page'); idle(page)
@@ -43,7 +43,7 @@ def test_create_templates_page_controls_and_reader_escape(browser, template, pag
     page.click('#select'); idle(page)
     page.click('#back'); idle(page)
     expect(page.locator('#books .book-open')).to_have_text('Un llibre que continua')
-    expect(page.locator('#language')).to_be_enabled()
+    expect_language_locked(page, False)
     context.close()
 
 
@@ -92,7 +92,7 @@ def test_shared_catalogue_search_pagination_reader_and_translation(catalogue):
     assert requests[-1]['offset'] == ['0']
     assert requests[-1]['q'] == ['no-match']
     expect(page.locator('#shared-status')).to_contain_text('Todavía no hay')
-    page.click('#close-shared'); page.select_option('#language', 'va')
+    page.click('#close-shared'); choose_language(page, 'va')
     page.click('#open-shared'); idle(page)
     expect(page.locator('#shared-heading')).to_have_text('Històries compartides')
     expect(page.locator('#shared-search')).to_have_attribute('aria-label', 'Buscar llibres')

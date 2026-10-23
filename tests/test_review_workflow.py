@@ -14,7 +14,7 @@ from PIL import Image
 from playwright.sync_api import expect
 StaticFiles = pytest.importorskip("starlette.staticfiles").StaticFiles
 
-from test_workshop import browser, idle
+from test_workshop import browser, idle, choose_language
 from test_publication import bank, ROOT
 
 
@@ -76,7 +76,7 @@ def test_pupil_submission_teacher_return_approval_and_private_images(browser,sch
     pupil=browser.new_context(viewport={'width':1440,'height':900})
     login=pupil.request.post(address+'/api/auth/student',data={'public_code':'ABC','pin':'1234'},headers={'Origin':address})
     assert login.status==200
-    page=pupil.new_page();page.goto(address);page.select_option('#language',language)
+    page=pupil.new_page();page.goto(address);choose_language(page, language)
     page.click('#new-book');page.fill('#title','La història de la classe');page.click('#create-form button[type=submit]');idle(page)
     image=tmp_path/'drawing.png';Image.new('RGBA',(96,64),(255,100,0,255)).save(image)
     page.set_input_files('#image-input',str(image));idle(page)
@@ -92,7 +92,7 @@ def test_pupil_submission_teacher_return_approval_and_private_images(browser,sch
     teacher=browser.new_context(viewport={'width':1440,'height':1000});teacher.add_cookies([teacher_cookie])
     review=teacher.new_page();image_responses=[]
     review.on('response',lambda response:image_responses.append(response.status) if '/files/images/' in response.url else None)
-    review.goto(address);review.select_option('#language',language);review.click('#open-reviews');idle(review)
+    review.goto(address);choose_language(review, language);review.click('#open-reviews');idle(review)
     expect(review.locator('#reviews-list .review-open')).to_have_count(1)
     review.locator('.review-open').click()
     frame=review.frame_locator('#review-frame');expect(frame.locator('#page-1')).to_be_visible()

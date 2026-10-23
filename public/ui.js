@@ -4182,15 +4182,28 @@ var Qa = { class: "book-card" }, $a = ["disabled"], eo = ["disabled", "aria-labe
 			let e = new URL(location.href);
 			e.searchParams.delete("example"), history.replaceState(null, "", e);
 		}
-		let S = /* @__PURE__ */ H(!1);
+		let S = /* @__PURE__ */ H(null);
 		async function C() {
 			try {
 				let e = await fetch("/account-status", { cache: "no-store" });
-				if (!e.ok || (await e.json()).enabled !== !0) return;
+				if (!e.ok || (await e.json()).enabled !== !0) throw Error("off");
 			} catch {
+				S.value = !1;
 				return;
 			}
-			if (!document.getElementById("edutictac-account-script")) {
+			if (window.edutictacLanguage = {
+				languages: [
+					"ca",
+					"va",
+					"es",
+					"en"
+				],
+				get: () => p.locale,
+				disabled: () => p.active,
+				set: (e) => {
+					p.active || f.language(e);
+				}
+			}, !document.getElementById("edutictac-account-script")) {
 				let e = document.createElement("link");
 				e.rel = "stylesheet", e.href = "/assets/account-widget.css", document.head.append(e);
 				let t = document.createElement("script");
@@ -4208,7 +4221,8 @@ var Qa = { class: "book-card" }, $a = ["disabled"], eo = ["disabled", "aria-labe
 					class: "brand",
 					href: "/"
 				}, [mi("◧ EduTicTac "), Q("b", null, "Llibres")], -1),
-				K(Q("select", {
+				S.value === !1 ? K((X(), Z("select", {
+					key: 0,
 					id: "language",
 					"onUpdate:modelValue": h[0] ||= (e) => U(p).locale = e,
 					disabled: U(p).active,
@@ -4219,9 +4233,9 @@ var Qa = { class: "book-card" }, $a = ["disabled"], eo = ["disabled", "aria-labe
 					Q("option", { value: "ca" }, "Català", -1),
 					Q("option", { value: "va" }, "Valencià", -1),
 					Q("option", { value: "en" }, "English", -1)
-				]], 40, Wc), [[La, U(p).locale]]),
+				]], 40, Wc)), [[La, U(p).locale]]) : hi("", !0),
 				S.value ? (X(), Z("edutictac-account", {
-					key: 0,
+					key: 1,
 					id: "accountWidget",
 					"data-home": "/commons-home",
 					"data-lang": U(p).locale,

@@ -69,14 +69,26 @@ function closeExample() {
 // Xip de compte central (<edutictac-account>, component Vue de Commons). Només
 // quan Commons servix Llibres: nginx respon /account-status i fa de proxy de
 // /assets/ i /api/auth/session cap al portal, així que tot és del mateix origen.
-const accountEnabled = ref(false);
+// null mentre es comprova: així el selector propi no apareix i desapareix.
+const accountEnabled = ref(null);
 async function mountAccount() {
   try {
     const response = await fetch("/account-status", { cache: "no-store" });
-    if (!response.ok || (await response.json()).enabled !== true) return;
+    if (!response.ok || (await response.json()).enabled !== true) throw new Error("off");
   } catch {
+    accountEnabled.value = false;
     return;
   }
+  // El xip tria l'idioma de Llibres, com el tema en Commons; amb un llibre obert
+  // no es canvia, igual que el selector propi.
+  window.edutictacLanguage = {
+    languages: ["ca", "va", "es", "en"],
+    get: () => state.locale,
+    disabled: () => state.active,
+    set: (value) => {
+      if (!state.active) core.language(value);
+    },
+  };
   if (!document.getElementById("edutictac-account-script")) {
     const css = document.createElement("link");
     css.rel = "stylesheet";
@@ -102,6 +114,7 @@ onUnmounted(core.dispose);
   <header class="masthead">
     <a class="brand" href="/">◧ EduTicTac <b>Llibres</b></a
     ><select
+      v-if="accountEnabled === false"
       id="language"
       v-model="state.locale"
       :disabled="state.active"

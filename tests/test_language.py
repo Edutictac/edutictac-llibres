@@ -2,7 +2,7 @@
 import json
 import pytest
 from playwright.sync_api import expect
-from test_workshop import BASE, browser, idle
+from test_workshop import BASE, browser, idle, choose_language, expect_language
 
 
 @pytest.mark.parametrize(('languages', 'expected'), [
@@ -17,18 +17,18 @@ def test_first_visit_uses_browser_language(browser, languages, expected):
     context = browser.new_context()
     context.add_init_script('Object.defineProperty(navigator, "languages", {get: () => ' + json.dumps(languages) + '})')
     page = context.new_page(); page.goto(BASE)
-    expect(page.locator('#language')).to_have_value(expected)
+    expect_language(page, expected)
     expect(page.locator('html')).to_have_attribute('lang', 'ca-valencia' if expected == 'va' else expected)
-    page.select_option('#language', 'ca' if expected == 'en' else 'en')
+    choose_language(page, 'ca' if expected == 'en' else 'en')
     page.reload()
-    expect(page.locator('#language')).to_have_value('ca' if expected == 'en' else 'en')
+    expect_language(page, 'ca' if expected == 'en' else 'en')
     context.close()
 
 
 def test_explicit_language_overrides_browser(browser):
     context = browser.new_context(locale='en-GB')
     page = context.new_page(); page.goto(BASE + '?lang=va')
-    expect(page.locator('#language')).to_have_value('va')
+    expect_language(page, 'va')
     context.close()
 
 
@@ -44,10 +44,10 @@ def test_shared_language_and_new_book(browser, lang, headline, cover):
     context.add_init_script("localStorage.setItem('llibres-language','es')")
     page = context.new_page()
     page.goto(BASE)
-    expect(page.locator('#language')).to_have_value(lang)
+    expect_language(page, lang)
     expect(page.locator('h1')).to_have_text(headline)
     page.reload()
-    expect(page.locator('#language')).to_have_value(lang)
+    expect_language(page, lang)
     page.click('#new-book')
     page.fill('#title', 'Language test')
     page.click('#create-form button[type=submit]')
@@ -68,8 +68,8 @@ def test_language_change_on_return_preserves_open_book(browser):
     context = browser.new_context()
     page = context.new_page()
     page.goto(BASE + '?lang=en')
-    expect(page.locator('#language')).to_have_value('en')
-    page.select_option('#language', 'ca')
+    expect_language(page, 'en')
+    choose_language(page, 'ca')
     assert 'lang=ca' in page.url
     assert next(c['value'] for c in context.cookies() if c['name'] == 'edutictac_language') == 'ca'
     page.click('#new-book'); page.fill('#title', 'Keep my book')
@@ -79,12 +79,12 @@ def test_language_change_on_return_preserves_open_book(browser):
     preference = next(c for c in context.cookies() if c['name'] == 'edutictac_language')
     context.add_cookies([{**preference, 'value': 'en'}])
     page.evaluate("window.dispatchEvent(new Event('focus'))")
-    expect(page.locator('#language')).to_have_value('ca')
+    expect_language(page, 'ca')
     page.click('#back'); idle(page)
-    expect(page.locator('#language')).to_have_value('en')
+    expect_language(page, 'en')
     expect(page.locator('#books .book-open')).to_have_text('Keep my book')
     page.reload()
-    expect(page.locator('#language')).to_have_value('en')
+    expect_language(page, 'en')
     context.close()
 
 
