@@ -2,6 +2,9 @@
 
 Estudi del 23-10-2026 sobre el codi actual. No implementa ni activa un mode còmic.
 
+La primera versió s'ha desenvolupat posteriorment: ús, decisions i límits en
+[COMIC_MODE.md](COMIC_MODE.md). Este document conserva l'estudi inicial.
+
 ## Conclusió
 
 És viable afegir-lo com una modalitat del mateix taller, amb esforç moderat.

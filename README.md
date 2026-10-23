@@ -33,6 +33,31 @@ Utilitza un navegador efímer, sense compte, i bloqueja les escriptures de xarxa
 No crea dades en el servidor. Les proves de `tests/test_demo.py` comproven els
 crèdits incorporats i que l'edició d'una còpia conserva els llibres existents.
 
+## Mode còmic
+
+Crear llibre → Còmic → triar 2, 3 o 4 vinyetes. El llibre té portada i una
+pàgina amb vinyetes. Les pàgines següents poden usar una distribució diferent.
+Els marcs queden protegits contra moviments accidentals.
+
+En una pàgina de còmic, triar la vinyeta abans d'afegir una imatge o una
+bafarada. Diàleg, pensament i narració es mouen com un sol objecte amb el text.
+Seleccionar la bafarada i prémer «Edita la bafarada» permet canviar-la. El
+guardat, `.elpx`, lector i publicació reutilitzen els mecanismes del llibre.
+
+La mostra «La granota i la idea brillant» està en valencià, amb personatges i
+un fons del Rebost, tres pàgines de còmic (2/3/4 vinyetes), portada i crèdits.
+Es pot llegir, descarregar o editar una còpia des de la portada local.
+
+```sh
+python scripts/build-demo.py --comic --origin http://127.0.0.1:8098 \
+  --rebost-origin https://llibres.edutictac.es
+```
+
+Esta primera versió ajusta les imatges a la vinyeta triada quan s'inserixen;
+després es poden moure lliurement. No incorpora retall automàtic, redistribució
+del contingut ni cues de bafarada editables amb punts. Les proves es fan primer en local i amb un candidat aïllat. L'estudi inicial està en
+[docs/COMIC_FEASIBILITY.md](docs/COMIC_FEASIBILITY.md).
+
 ## Iniciar
 
 ```sh
@@ -57,7 +82,7 @@ No hay sincronización ni guardado automático durante la escritura.
 
 ## Alcance
 
-- Estantería local, título y tres plantillas de inicio.
+- Estantería local, título y cuatro plantillas de inicio, incluido el cómic.
 - Páginas con texto, imágenes del dispositivo y dibujo libre sencillo.
 - Añadir, renombrar, subir/bajar y eliminar páginas; al menos una página por libro.
 - Guardar/reabrir, descargar fuente `.elpx`, lectura de páginas, HTML y EPUB.

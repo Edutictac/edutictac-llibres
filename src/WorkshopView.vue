@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from "vue";
 const props = defineProps({ core: Object });
-defineEmits(["publish"]);
+defineEmits(["publish", "bubble"]);
 const model = props.core.state,
   t = props.core.t,
   engineHost = ref(null);
@@ -67,6 +67,11 @@ defineExpose({ host: () => engineHost.value });
         >
           {{ t("addPage") }}
         </button>
+        <label v-if="model.comic" for="new-comic-layout">{{ t('comicNewPage') }}
+          <select id="new-comic-layout" v-model.number="model.newComicLayout">
+            <option v-for="count in [2,3,4]" :key="count" :value="count">{{ count }} {{ t('comicPanels') }}</option>
+          </select>
+        </label>
         <div class="page-actions">
           <button
             id="move-up"
@@ -96,7 +101,7 @@ defineExpose({ host: () => engineHost.value });
             {{ t("delete") }}
           </button>
         </div>
-        <p class="tip">{{ t(model.automatic ? "creditsHint" : "tip") }}</p>
+        <p class="tip">{{ t(model.automatic ? "creditsHint" : model.comicPanels ? 'comicTip' : "tip") }}</p>
       </aside>
       <div class="editor-panel">
         <div class="editor-toolbar">
@@ -132,6 +137,16 @@ defineExpose({ host: () => engineHost.value });
           >
             {{ t(model.advanced ? "editSimple" : "advanced") }}
           </button>
+        </div>
+        <div v-if="model.comicPanels" class="comic-toolbar" :aria-label="t('comic')">
+          <label for="comic-panel">{{ t('comicPanel') }}
+            <select id="comic-panel" :value="model.comicPanelIndex" @change="core.chooseComicPanel($event.target.value)">
+              <option v-for="index in model.comicPanels" :key="index" :value="index-1">{{ index }}</option>
+            </select>
+          </label>
+          <button id="add-bubble" @click="$emit('bubble',false)">{{ t('comicAddBubble') }}</button>
+          <button id="edit-bubble" :disabled="!model.bubbleSelected" @click="$emit('bubble',true)">{{ t('comicEditBubble') }}</button>
+          <span>{{ t('comicPlacementHint') }}</span>
         </div>
         <div id="engine-host" ref="engineHost"></div>
       </div>

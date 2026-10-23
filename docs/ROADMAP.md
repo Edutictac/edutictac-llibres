@@ -1,5 +1,16 @@
 # Roadmap de EduTicTac Llibres
 
+## Mode còmic
+
+- [x] Plantilles fixes de 2, 3 i 4 vinyetes amb marcs protegits.
+- [x] Bafarades de diàleg/pensament i caixes de narració; text i forma agrupats.
+- [x] Edició, moviment, desfer/refés, guardat i reimportació `.elpx`.
+- [x] Mateix selector Rebost, crèdits, lector i publicació.
+- [x] Exemple editable en valencià: «La granota i la idea brillant».
+- [ ] Retall automàtic, vinyetes irregulars i redistribució de contingut.
+
+Implementació i límits en [COMIC_MODE.md](COMIC_MODE.md).
+
 ## Hito implementado: publicar historias en el banco de recursos
 
 Petición expresa del usuario, 21-10-2026. **Implementado como conexión opcional; validado en local**.

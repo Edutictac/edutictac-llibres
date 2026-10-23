@@ -23,6 +23,11 @@
 .demo-book img { width: 280px; max-width: 100%; height: auto; border-radius: 10px; }
 .demo-book > a { flex-shrink: 0; }
 .demo-book h2 { margin: 0; }
+.comic-toolbar { display:flex; flex-wrap:wrap; align-items:center; gap:12px; padding:10px; background:#f0f3e8; }
+.comic-toolbar label { display:flex; align-items:center; gap:8px; }
+.comic-toolbar span { color:var(--muted); font-size:14px; }
+#bubble-dialog { width:min(560px,94vw); }
+#bubble-dialog label, #bubble-dialog textarea { display:block; width:100%; margin:12px 0 6px; }
 .demo-link { display: inline-block; padding: 10px 0; color: var(--green); font-weight: 600; }
 @media (max-width: 720px) {
   .demo-book { flex-direction: column; align-items: stretch; gap: 16px; }

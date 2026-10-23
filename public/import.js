@@ -162,6 +162,14 @@ export async function inspectBook(bytes) {
       for (const [key, v] of Object.entries(value)) {
         if (["__proto__", "constructor", "prototype"].includes(key))
           throw new Error("invalid");
+        if (key === 'layoutManager') {
+          // Fabric 7 serializes this built-in descriptor inside standard groups.
+          // Do not allow arbitrary registered layout classes or extra payloads.
+          if (String(value.type).toLowerCase() !== 'group' || !v || v.type !== 'layoutManager' || v.strategy !== 'fit-content' ||
+              Object.keys(v).some(k=>!['type','strategy'].includes(k)))
+            throw new Error('invalid');
+          continue;
+        }
         if (
           key === "type" &&
           ![

@@ -1,0 +1,66 @@
+{
+  "title": "La granota i la idea brillant",
+  "language": "va",
+  "license": "CC-BY-SA-2.0",
+  "author": "EduTicTac",
+  "pages": 5,
+  "elpx_sha256": "081992a4de8f2a4bdcd61ae1b0c5001228ef261aec9d434fceb0760d516a9139",
+  "images": [
+    {
+      "format": "llibres-rebost-credit",
+      "version": 1,
+      "id": "img-a38888de1aadf490ae3496d884e4e96e5dc0cea1f7803c82d4469a2ca7aba047",
+      "revision": 193616325320813,
+      "name": "Granota",
+      "changes": "Imported as normalized PNG into Llibres; placement, size and appearance may be edited.",
+      "source_id": "scratch:390845c11df0924f3b627bafeb3f814e.svg",
+      "source_revision": "fa7ed724dd3070486ccf12424bd633f95572bdfd",
+      "source_path": "src/lib/libraries/sprites.json#Frog",
+      "source_repository": "https://github.com/scratchfoundation/scratch-gui",
+      "license": "CC-BY-SA-2.0",
+      "attribution": "Scratch is developed by the Lifelong Kindergarten Group at the MIT Media Lab. See http://scratch.mit.edu."
+    },
+    {
+      "format": "llibres-rebost-credit",
+      "version": 1,
+      "id": "img-4fe6c75aa1d8b760c5f896603dd9f2186549f9a52042a5b876a511029a4a64fd",
+      "revision": 74434150091658,
+      "name": "Papallona 1",
+      "changes": "Imported as normalized PNG into Llibres; placement, size and appearance may be edited.",
+      "source_id": "scratch:fe98df7367e314d9640bfaa54fc239be.svg",
+      "source_revision": "fa7ed724dd3070486ccf12424bd633f95572bdfd",
+      "source_path": "src/lib/libraries/sprites.json#Butterfly 1",
+      "source_repository": "https://github.com/scratchfoundation/scratch-gui",
+      "license": "CC-BY-SA-2.0",
+      "attribution": "Scratch is developed by the Lifelong Kindergarten Group at the MIT Media Lab. See http://scratch.mit.edu."
+    },
+    {
+      "format": "llibres-rebost-credit",
+      "version": 1,
+      "id": "img-b8b04fa7fe4ad146066faa1c3d89390c56654b7b702e91314f319f39b4dfba5f",
+      "revision": 227384441156058,
+      "name": "Ànec",
+      "changes": "Imported as normalized PNG into Llibres; placement, size and appearance may be edited.",
+      "source_id": "scratch:c9837d0454f5f0f73df290af2045359b.svg",
+      "source_revision": "fa7ed724dd3070486ccf12424bd633f95572bdfd",
+      "source_path": "src/lib/libraries/sprites.json#Duck",
+      "source_repository": "https://github.com/scratchfoundation/scratch-gui",
+      "license": "CC-BY-SA-2.0",
+      "attribution": "Scratch is developed by the Lifelong Kindergarten Group at the MIT Media Lab. See http://scratch.mit.edu."
+    },
+    {
+      "format": "llibres-rebost-credit",
+      "version": 1,
+      "id": "img-32cffc180612b3d2a7020ce4cba972be07aead45c2524b2b2a471057a874ba8f",
+      "revision": 3572891413165,
+      "name": "Bosc",
+      "changes": "Imported as normalized PNG into Llibres; placement, size and appearance may be edited.",
+      "source_id": "scratch:f3eb165d6f3fd23370f97079f2e631bf.svg",
+      "source_revision": "fa7ed724dd3070486ccf12424bd633f95572bdfd",
+      "source_path": "src/lib/libraries/backdrops.json#Woods",
+      "source_repository": "https://github.com/scratchfoundation/scratch-gui",
+      "license": "CC-BY-SA-2.0",
+      "attribution": "Scratch is developed by the Lifelong Kindergarten Group at the MIT Media Lab. See http://scratch.mit.edu."
+    }
+  ]
+}

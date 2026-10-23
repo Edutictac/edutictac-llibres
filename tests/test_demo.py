@@ -54,3 +54,24 @@ def test_read_and_edit_sample_without_replacing_existing_books(browser):
     expect(page.locator('#books')).to_contain_text('El meu conte')
     expect(page.locator('#books')).to_contain_text('El meu final')
     context.close()
+
+
+def test_comic_sample_opens_as_an_editable_copy(browser):
+    context=browser.new_context(viewport={'width':1500,'height':1100})
+    page=context.new_page();page.goto(BASE+'/?lang=va')
+    page.click('#edit-comic-demo');idle(page)
+    expect(page.locator('#book-title')).to_have_value('La granota i la idea brillant')
+    expect(page.locator('.page-tab')).to_have_count(5)
+    for page_index,panels in [(1,2),(2,3),(3,4)]:
+        page.locator('.page-tab').nth(page_index).click();idle(page)
+        frame=page.locator('#engine-host iframe').element_handle().content_frame()
+        counts=frame.evaluate('''() => {
+          const objects=__slideEditorCanvas.getObjects();
+          return {panels:objects.filter(o=>o.slideMeta?.comicPanel).length,bubbles:objects.filter(o=>o.slideMeta?.comicBubble).length};
+        }''')
+        assert counts=={'panels':panels,'bubbles':panels}
+    page.click('#back');idle(page)
+    expect(page.locator('#book-count')).to_have_text('1')
+    provenance=json.loads((EXAMPLE.parent/'la-granota/provenance.json').read_text())
+    assert len(provenance['images'])==4 and provenance['language']=='va'
+    context.close()

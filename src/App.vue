@@ -10,6 +10,7 @@ import ImagePicker from "./ImagePicker.vue";
 import PublicationDialog from "./PublicationDialog.vue";
 import SharedStories from "./SharedStories.vue";
 import DemoBook from "./DemoBook.vue";
+import BubbleDialog from './BubbleDialog.vue';
 const shelf = ref(null),
   reviews = ref(null),
   createDialog = ref(null),
@@ -18,6 +19,7 @@ const shelf = ref(null),
   picker = ref(null),
   publication = ref(null),
   shared = ref(null);
+const bubble = ref(null);
 const imageInput = ref(null),
   fileInput = ref(null);
 const core = createWorkshop({
@@ -39,14 +41,15 @@ function imageFile(event) {
   event.target.value = "";
   if (file) core.action(() => core.image(file));
 }
-function openDemo() {
+function openDemo(comic=false) {
   core.action(async () => {
-    const response = await fetch('/examples/la-papallona/la-papallona.elpx');
+    const slug=comic?'la-granota':'la-papallona';
+    const response = await fetch('/examples/'+slug+'/'+slug+'.elpx');
     if (!response.ok) throw new Error('invalid');
     const bytes = await response.arrayBuffer();
     if (bytes.byteLength > 25 * 1024 * 1024) throw new Error('invalid');
     core.language('va', false);
-    await core.importFile(new File([bytes], 'La papallona i els colors del bosc.elpx', {type:'application/zip'}));
+    await core.importFile(new File([bytes], slug+'.elpx', {type:'application/zip'}));
   }, 'loading');
 }
 onMounted(core.start);
@@ -107,7 +110,8 @@ onUnmounted(core.dispose);
         <span class="star">✳</span>
       </div>
     </section>
-    <DemoBook :locale="state.locale" :busy="state.busy" @edit="openDemo" />
+    <DemoBook :locale="state.locale" :busy="state.busy" @edit="openDemo(false)" />
+    <DemoBook comic :locale="state.locale" :busy="state.busy" @edit="openDemo(true)" />
     <Bookshelf
       ref="shelf"
       :locale="state.locale"
@@ -120,7 +124,8 @@ onUnmounted(core.dispose);
     </footer>
   </main>
 
-  <WorkshopView ref="workshop" :core="core" @publish="publication.open()" />
+  <WorkshopView ref="workshop" :core="core" @publish="publication.open()" @bubble="editing => bubble.open(editing)" />
+  <BubbleDialog ref="bubble" :core="core" />
   <CreateDialog ref="createDialog" :locale="state.locale" :core="core" />
   <ReaderDialog ref="reader" :core="core" />
   <ImagePicker ref="picker" :core="core" @device="imageInput.click()" />

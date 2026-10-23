@@ -31,6 +31,11 @@ export function createWorkshop(view) {
     contentIndex: -1,
     contentCount: 0,
     automatic: false,
+    comic: false,
+    comicPanels: 0,
+    comicPanelIndex: 0,
+    newComicLayout: 2,
+    bubbleSelected: false,
     advanced: false,
     publicationEnabled: false,
     rebostEnabled: false,
@@ -69,6 +74,9 @@ export function createWorkshop(view) {
         "rebostSession",
         "rebostError",
         "rebostChanged",
+        "comicChoosePage",
+        "comicSelectBubble",
+        "comicTextTooLong",
       ];
       notice(
         t(
@@ -116,6 +124,12 @@ export function createWorkshop(view) {
     state.contentCount = content.length;
     state.contentIndex = content.findIndex((p) => p.id === selected);
     state.automatic = state.contentIndex < 0;
+    const comic = editor.comicInfo();
+    state.comic = comic.enabled;
+    state.comicPanels = state.automatic ? 0 : comic.layout;
+    state.comicPanelIndex = Math.min(state.comicPanelIndex, Math.max(0,state.comicPanels-1));
+    editor.comicPanelIndex = state.comicPanelIndex;
+    state.bubbleSelected = !state.automatic && !!editor.selectedBubble();
     editor.window.document.body.classList.toggle(
       "llibres-credits",
       state.automatic,
@@ -140,6 +154,7 @@ export function createWorkshop(view) {
     frame.src = "/engine/index.html";
     view.host().replaceChildren(frame);
     editor = new Editor(frame);
+    editor.comicSelectionChanged = () => { state.bubbleSelected = !!editor.selectedBubble(); };
     await editor.ready();
     editor.changed = markDirty;
     editor.connectImagePicker(pickImage);
@@ -166,7 +181,7 @@ export function createWorkshop(view) {
     dirty = false;
     state.statusKey = "saved";
   }
-  async function create({ title, template }) {
+  async function create({ title, template, layout = 2 }) {
     book = null;
     await mount();
     book = {
@@ -176,7 +191,8 @@ export function createWorkshop(view) {
       title,
       createdAt: Date.now(),
     };
-    selected = await editor.create(title, template, state.locale);
+    state.newComicLayout = [2,3,4].includes(layout) ? layout : 2;
+    selected = await editor.create(title, template, state.locale, state.newComicLayout);
     state.title = title;
     refreshPages();
     await persist();
@@ -186,6 +202,7 @@ export function createWorkshop(view) {
     await mount();
     book = value;
     selected = await editor.open(value.bytes);
+    state.newComicLayout = editor.comicInfo().defaultLayout;
     state.title = editor.title();
     refreshPages();
     dirty = false;
@@ -204,6 +221,7 @@ export function createWorkshop(view) {
       createdAt: Date.now(),
     };
     selected = await editor.open(safe);
+    state.newComicLayout = editor.comicInfo().defaultLayout;
     state.title = editor.title();
     refreshPages();
     await persist();
@@ -233,6 +251,7 @@ export function createWorkshop(view) {
   async function addPage() {
     selected = await editor.addPage(
       t("page") + " " + editor.contentPages().length,
+      state.comic ? Number(state.newComicLayout) : 0,
     );
     markDirty();
     refreshPages();
@@ -312,6 +331,16 @@ export function createWorkshop(view) {
     if (credit) await editor.select(selected);
     refreshPages();
   }
+  function chooseComicPanel(value = state.comicPanelIndex) {
+    state.comicPanelIndex = Math.min(Math.max(0,Number(value)||0),Math.max(0,state.comicPanels-1));
+    editor.comicPanelIndex = state.comicPanelIndex;
+  }
+  function bubbleDraft() { return editor.bubbleDraft(); }
+  async function writeBubble(draft) {
+    await editor.writeBubble(draft);
+    markDirty();
+    notice('');
+  }
   async function publicationData() {
     await persist(false);
     return {
@@ -387,6 +416,9 @@ export function createWorkshop(view) {
     read,
     pickImage,
     image,
+    chooseComicPanel,
+    bubbleDraft,
+    writeBubble,
     context,
     matches,
     publicationData,

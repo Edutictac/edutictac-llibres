@@ -6,17 +6,18 @@ const t = (key) => messages[props.locale][key] || key;
 const dialog = ref(null),
   input = ref(null),
   title = ref(""),
-  template = ref("story");
+  template = ref("story"),
+  layout = ref(2);
 function open() {
   dialog.value.showModal();
   input.value.focus();
 }
 function submit() {
   const name = title.value.trim();
-  if (!name || !["story", "album", "blank"].includes(template.value)) return;
+  if (!name || !["story", "album", "blank", "comic"].includes(template.value)) return;
   dialog.value.close();
   props.core.action(
-    () => props.core.create({ title: name, template: template.value }),
+    () => props.core.create({ title: name, template: template.value, layout: Number(layout.value) }),
     "loading",
   );
 }
@@ -53,6 +54,9 @@ defineExpose({ open });
       <fieldset>
         <legend>{{ t("template") }}</legend>
         <div class="templates">
+          <label><input type="radio" v-model="template" name="template" value="comic" />
+            <span class="template-card sage"><b>{{ t('comic') }}</b><small>{{ t('comicHelp') }}</small></span>
+          </label>
           <label
             ><input
               type="radio"
@@ -86,6 +90,11 @@ defineExpose({ open });
           >
         </div>
       </fieldset>
+      <label v-if="template === 'comic'" for="comic-layout">{{ t('comicLayout') }}
+        <select id="comic-layout" v-model.number="layout">
+          <option v-for="count in [2,3,4]" :key="count" :value="count">{{ count }} {{ t('comicPanels') }}</option>
+        </select>
+      </label>
       <button class="primary" type="submit">{{ t("start") }}</button>
     </form>
   </dialog>

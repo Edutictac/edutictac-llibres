@@ -31,3 +31,22 @@ def test_credit_text_urls_and_svg_resources(browser, content, valid):
     assert result is valid
     assert page.evaluate('window.__unsafe') is None
     context.close()
+
+
+@pytest.mark.parametrize(('descriptor','valid'),[
+    ({'type':'layoutManager','strategy':'fit-content'},True),
+    ({'type':'arbitrary-layout','strategy':'fit-content'},False),
+    ({'type':'layoutManager','strategy':'arbitrary-layout'},False),
+    ({'type':'layoutManager','strategy':'fit-content','options':{'src':'https://example.invalid'}},False),
+])
+def test_standard_group_layout_descriptor_only(browser,descriptor,valid):
+    context=browser.new_context();page=context.new_page();page.goto(BASE)
+    accepted=page.evaluate('''async descriptor => {
+      const scene={engine:'fabric',version:3,width:1280,height:720,
+        fabric:{objects:[{type:'Group',layoutManager:descriptor,objects:[]}]},svg:''};
+      const xml='<ode><odeNavStructure/><odeIdeviceTypeName>slide</odeIdeviceTypeName><jsonProperties><![CDATA['+JSON.stringify(scene)+']]></jsonProperties></ode>';
+      const bytes=fflate.zipSync({'content.xml':new TextEncoder().encode(xml)});
+      try {await (await import('/import.js')).inspectBook(bytes.buffer);return true;}catch{return false;}
+    }''',descriptor)
+    assert accepted is valid
+    context.close()

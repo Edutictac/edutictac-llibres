@@ -7,6 +7,7 @@ import {
   sceneObjects,
 } from "./credits.js";
 import { validateCredit } from "./rebost.js";
+import {layouts, panelBoxes, comicPanels, bubbleData, makeBubble, protectPanels} from './comic.js';
 export class Editor {
   constructor(frame) {
     this.frame = frame;
@@ -14,6 +15,8 @@ export class Editor {
     this.serial = 0;
     this.counter = 0;
     this.changed = () => {};
+    this.comicSelectionChanged = () => {};
+    this.comicPanelIndex = 0;
     window.addEventListener("message", (event) => {
       if (
         event.origin !== location.origin ||
@@ -179,6 +182,13 @@ export class Editor {
     }
     await this.recoverLegacyCredits(canvas);
     this.removeInlineCredits();
+    protectPanels(canvas, () => this.window.crypto.randomUUID());
+    if (!canvas.__llibresComicObserved) {
+      canvas.__llibresComicObserved = true;
+      for (const event of ['selection:created', 'selection:updated', 'selection:cleared'])
+        canvas.on(event, () => this.comicSelectionChanged());
+      canvas.on('object:added', () => protectPanels(canvas, () => this.window.crypto.randomUUID()));
+    }
     if (!canvas.__llibresObserved) {
       canvas.__llibresObserved = true;
       for (const event of [
@@ -464,7 +474,7 @@ export class Editor {
       jsonProperties: JSON.stringify(payload),
     });
   }
-  async create(title, template, lang) {
+  async create(title, template, lang, layout = 2) {
     const text = messages[lang] || messages.es;
     const b = this.bridge.structureBinding;
     for (const p of this.pages()) b.deletePage(p.id);
@@ -486,7 +496,17 @@ export class Editor {
         text.storySubtitle,
       ),
     );
-    if (template !== "blank")
+    if (template === 'comic') {
+      // Slides loads Fabric when its first editing canvas is mounted.
+      await this.showPage(cover.id);
+      await this.edit();
+      await this.flush(false);
+      const scene = this.pageScene(this.pages().find(p => p.id === cover.id));
+      scene.data.fabric.objects[0].slideMeta = {comicDocument: {version: 1, layout: layouts.includes(layout) ? layout : 2}};
+      this.bridge.structureBinding.updateComponent(scene.component.id, {jsonProperties: JSON.stringify(scene.data)});
+      const page = b.addPage(text.page + ' 1');
+      this.addSlide(page.id, this.comicScene(text.page + ' 1', layout));
+    } else if (template !== "blank")
       for (let i = 1; i <= 2; i++) {
         const p = b.addPage(text.page + " " + i);
         this.addSlide(
@@ -501,10 +521,58 @@ export class Editor {
     await this.edit();
     return cover.id;
   }
-  async addPage(name) {
+  comicScene(name, layout) {
+    if (!layouts.includes(layout)) layout = 2;
+    const scene = this.scene('');
+    const heading = new this.window.fabric.Textbox(name, {
+      originX:'left', originY:'top', left:60, top:40, width:1160,
+      fontFamily:'Arial', fontSize:38, fill:'#193f38',
+    });
+    const objects = [heading, ...comicPanels(this.window.fabric, layout)];
+    scene.fabric.objects = objects.map(object => object.toObject(['slideMeta']));
+    scene.svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720"><rect width="1280" height="720" fill="#fffdf5"/>${objects.map(o=>o.toSVG()).join('')}</svg>`;
+    return scene;
+  }
+  comicInfo() {
+    const scenes = this.contentPages().map(p => ({page:p, data:this.pageScene(p).data}));
+    const current = scenes.find(s=>s.page.id===this.activePage);
+    const marker = scenes.flatMap(s=>s.data?.fabric?.objects || []).find(o=>o.slideMeta?.comicDocument || o.slideMeta?.comicPanel);
+    const defaults = marker?.slideMeta?.comicDocument || marker?.slideMeta?.comicPanel;
+    const frame = current?.data?.fabric?.objects?.find(o=>o.slideMeta?.comicPanel);
+    const layout = frame?.slideMeta.comicPanel.layout;
+    return {enabled:!!marker, layout:layouts.includes(layout)?layout:0, defaultLayout:layouts.includes(defaults?.layout)?defaults.layout:2};
+  }
+  selectedBubble() {
+    const object = this.window.__slideEditorCanvas?.getActiveObject();
+    return bubbleData(object) ? object : null;
+  }
+  bubbleDraft() { return bubbleData(this.selectedBubble()); }
+  targetPanel() {
+    const boxes = panelBoxes(this.comicInfo().layout);
+    return boxes[Math.min(Math.max(0,this.comicPanelIndex),boxes.length-1)];
+  }
+  async writeBubble(draft) {
+    const canvas = await this.drawing(false), box = this.targetPanel();
+    if (!box) throw new Error('comicChoosePage');
+    const old = draft.id ? canvas.getObjects().find(o=>bubbleData(o)?.id===draft.id) : null;
+    if (draft.id && !old) throw new Error('comicSelectBubble');
+    let group = makeBubble(this.window.fabric, {...draft,id: draft.id || this.window.crypto.randomUUID()}, box);
+    if (old) {
+      const position={left:old.left,top:old.top,angle:old.angle,scaleX:old.scaleX,scaleY:old.scaleY};
+      const children=group.removeAll();
+      old.removeAll();old.add(...children);old.slideMeta=group.slideMeta;old.set(position);
+      group=old;
+      // One modification for Slides' native undo history, rather than a delete
+      // followed by an insert that would temporarily lose the edited bubble.
+      canvas.fire('object:modified',{target:group});
+    } else canvas.add(group);
+    canvas.setActiveObject(group); group.setCoords(); canvas.requestRenderAll();
+    this.comicSelectionChanged(); this.changed();
+  }
+  async addPage(name, comicLayout = 0) {
     await this.flush();
     const p = this.bridge.structureBinding.addPage(name);
-    this.addSlide(p.id, this.scene(""));
+    this.addSlide(p.id, layouts.includes(comicLayout) ? this.comicScene(name, comicLayout) : this.scene(""));
     await this.syncCredits();
     await this.showPage(p.id);
     await this.edit();
@@ -630,6 +698,11 @@ export class Editor {
       scaleX: scale,
       scaleY: scale,
     });
+    const panel = this.targetPanel();
+    if (panel) {
+      const fit = Math.min((panel.width-40)/image.width,(panel.height-60)/image.height,1);
+      image.set({left:panel.left+(panel.width-image.width*fit)/2, top:panel.top+(panel.height-image.height*fit)/2, scaleX:fit, scaleY:fit});
+    }
     image.slideAssetUrl = asset;
     image.slideAssetName = file.name;
     if (credit) image.slideMeta = { rebostCredits: [imageCredit(credit)] };
