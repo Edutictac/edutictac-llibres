@@ -1,63 +1,30 @@
 <!doctype html>
 <html lang="es">
-  <meta charset="utf-8" /><meta
-    name="viewport"
-    content="width=device-width,initial-scale=1"
-  /><title>Sobre Llibres · Sobre Llibres</title
-  ><link rel="stylesheet" href="/app.css" />
-  <main style="max-width: 850px; padding-top: 40px">
-    <a href="/">← EduTicTac Llibres</a>
-    <h1>EduTicTac Llibres</h1>
-    <p>
-      Crea libros ilustrados de forma independiente y
-      conecta opcionalmente con Rebost para copiar imágenes al libro. Tus
-      libros se guardan en este navegador al pulsar Guardar; descarga una copia
-      para conservarlos.
-    </p>
-    <p>
-      Crea llibres il·lustrats de manera independent i
-      connecta opcionalment amb Rebost per a copiar imatges al llibre. Els teus
-      llibres es guarden en este navegador quan prems Guarda; descarrega una
-      còpia per a conservar-los.
-    </p>
-    <h2>Software libre / Programari lliure</h2>
-    <p>
-      EduTicTac Llibres y eXeLearning: AGPL-3.0-or-later. iDevice Slide: CC
-      BY-SA 4.0. Fabric.js: MIT. DOMPurify: MPL-2.0 o Apache-2.0. fflate: MIT.
-      Interfaz / Interfície: Vue 3.5.44,
-      <a href="/licenses/vue-MIT.txt">licencia MIT / llicència MIT</a>.
-      Se mantienen los avisos originales de cada componente.
-    </p>
-    <ul>
-      <li>
-        <a href="/source/llibres-source.zip"
-          >Código fuente e instrucciones / Codi font i
-          instruccions</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/exelearning/exelearning/tree/63748a3d87c8c3a757ef5f3479945db871ddb4c2"
-          >Código original de eXeLearning 4.0.5 / Codi original</a
-        >
-      </li>
-      <li>
-        <a href="https://github.com/exelearning/exelearning/releases/tag/v4.0.5"
-          >Distribución oficial / Distribució oficial</a
-        >
-      </li>
-      <li>
-        <a href="https://creativecommons.org/licenses/by-sa/4.0/"
-          >Licencia de Slide / Llicència de Slide</a
-        >
-      </li>
-    </ul>
-    <p>
-      La conexión opcional a Rebost utiliza tu
-      sesión de Commons y conserva los créditos y licencias de las imágenes. La
-      conexión opcional al banco permite publicar y retirar libros con sesión
-      docente. Narraciones, IA y cuentas propias quedan para futuras
-      iteraciones. EPUB experimental.
-    </p>
-  </main>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Acerca de · EduTicTac Llibres</title>
+    <link rel="stylesheet" href="/app.css" />
+    <script src="/language-preference.js"></script>
+    <script type="module" src="/about.js"></script>
+  </head>
+  <body>
+    <main style="max-width: 850px; padding-top: 40px">
+      <a id="back-home" href="/">← EduTicTac Llibres</a>
+      <h1>EduTicTac Llibres</h1>
+      <p data-about="intro">Crea libros ilustrados y cómics con textos, imágenes y dibujos. Tus libros se guardan en este navegador al pulsar Guardar; descarga una copia para conservarlos.</p>
+      <h2 data-about="free">Software libre</h2>
+      <p data-about="licenses">EduTicTac Llibres y eXeLearning: AGPL-3.0-or-later. iDevice Slide: CC BY-SA 4.0. Fabric.js: MIT. DOMPurify: MPL-2.0 o Apache-2.0. fflate: MIT.</p>
+      <p><span data-about="interface">Interfaz: Vue 3.5.44,</span> <a href="/licenses/vue-MIT.txt" data-about="mit">licencia MIT</a>.</p>
+      <p data-about="notices">Se mantienen los avisos originales de cada componente.</p>
+      <ul>
+        <li><a href="/source/llibres-source.zip" data-about="source">Código fuente e instrucciones</a></li>
+        <li><a href="https://github.com/exelearning/exelearning/tree/63748a3d87c8c3a757ef5f3479945db871ddb4c2" data-about="upstream">Código original de eXeLearning 4.0.5</a></li>
+        <li><a href="https://github.com/exelearning/exelearning/releases/tag/v4.0.5" data-about="release">Distribución oficial</a></li>
+        <li><a href="https://creativecommons.org/licenses/by-sa/4.0/" data-about="slide">Licencia de Slide</a></li>
+      </ul>
+      <p data-about="rebost">Los catálogos públicos de Rebost se pueden consultar sin cuenta. Tus imágenes personales requieren entrar con tu cuenta de EduTicTac. Las imágenes incorporadas al libro conservan sus créditos y licencias.</p>
+      <p data-about="publish">El profesorado puede publicar libros en el Banc de recursos. El alumnado envía sus libros a su docente para que los revise y apruebe antes de publicarlos. La exportación EPUB es experimental.</p>
+    </main>
+  </body>
 </html>

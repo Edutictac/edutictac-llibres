@@ -24,6 +24,7 @@ export default defineConfig({
         "/import.js",
         "/rebost.js",
         "/examples.js",
+        "/locale.js",
       ],
     },
     minify: true,
