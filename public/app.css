@@ -11,7 +11,8 @@
   background: var(--paper);
 }
 .demo-book {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(160px, 280px) minmax(0, 1fr);
   align-items: center;
   gap: 32px;
   padding: 24px;
@@ -20,8 +21,9 @@
   border-radius: 18px;
   background: #f0f3e8;
 }
-.demo-book img { width: 280px; max-width: 100%; height: auto; border-radius: 10px; }
-.demo-book > a { flex-shrink: 0; }
+.demo-book img { display: block; width: 100%; height: auto; border-radius: 10px; }
+.demo-book > a { min-width: 0; }
+.demo-book > div { min-width: 0; }
 .demo-book h2 { margin: 0; }
 .comic-toolbar { display:flex; flex-wrap:wrap; align-items:center; gap:12px; padding:10px; background:#f0f3e8; }
 .comic-toolbar label { display:flex; align-items:center; gap:8px; }
@@ -47,7 +49,8 @@
 }
 .demo-link:hover, .demo-book .actions > button:hover { border-color: var(--green); background: #f3f7f0; }
 @media (max-width: 720px) {
-  .demo-book { flex-direction: column; align-items: stretch; gap: 16px; }
+  .demo-book { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .demo-book > a { width: min(100%, 360px); }
 }
 * {
   box-sizing: border-box;
@@ -128,7 +131,7 @@ main {
 }
 .hero {
   display: grid;
-  grid-template-columns: 1.25fr 1fr;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
   gap: 70px;
   align-items: center;
   padding: 70px 0 60px;
@@ -156,6 +159,12 @@ main {
   display: flex;
   gap: 12px;
   margin-top: 28px;
+}
+#home .actions {
+  flex-wrap: wrap;
+}
+#home .hero .actions > button {
+  flex: 1 1 180px;
 }
 .storage-note {
   font-size: 12px;
@@ -620,6 +629,16 @@ legend {
   }
 }
 @media (max-width: 650px) {
+  .masthead {
+    height: auto;
+    min-height: 80px;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px 20px;
+  }
+  .brand {
+    font-size: 20px;
+  }
   main {
     padding: 0 22px;
   }
@@ -646,7 +665,30 @@ legend {
     flex-wrap: wrap;
   }
   footer {
-    display: block;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+@media (min-width: 651px) and (max-width: 900px) {
+  #home .hero {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 40px 0;
+  }
+  #home .hero-art {
+    display: none;
+  }
+  #home .hero .actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  #home .demo-book {
+    padding: 18px;
+    margin-bottom: 28px;
+  }
+  #home .demo-book .actions > * {
+    width: 100%;
   }
 }
 #image-picker {

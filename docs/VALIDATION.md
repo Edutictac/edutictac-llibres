@@ -405,3 +405,16 @@ mantiene el idioma. Se actualiza también al volver a enfocar la página.
 creación y guardado. Comprobación en navegador de los cuatro idiomas, vuelta al
 editor, idioma regional del navegador y prioridad del parámetro URL. Revisión
 visual en valenciano sin párrafos duplicados ni textos bilingües.
+
+## Portada adaptable — 23-10-2026
+
+Se reproduce desbordamiento horizontal en producción a 768 px (805 px de
+contenido). Columnas de portada y muestras con mínimos flexibles; acciones que
+se distribuyen en filas, tarjetas apiladas en pantallas estrechas y botones de
+muestra a todo el ancho en móvil. Cabecera y pie se reorganizan sin cortar textos.
+
+Comprobación en navegador de 32 combinaciones: ES/VA/CA/EN a 320, 390, 650, 720,
+768, 900, 1024 y 1440 px. Sin desplazamiento horizontal, controles visibles y
+muestras dentro del ancho disponible, incluyendo botones públicos de publicación.
+Lectura del cómic y apertura del diálogo de creación comprobadas a 390 px.
+Capturas móvil/tablet/ordenador revisadas. Cambio limitado a estilos.
