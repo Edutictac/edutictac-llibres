@@ -386,3 +386,9 @@ con libros y cuentas reales corresponde al siguiente paso de aceptación.
   y `ca-ES-valencia` reconocidas; idioma sin traducción usa el siguiente de la
   lista o castellano. 13 pruebas de idiomas aprobadas, con seis listas del
   navegador y prioridad de URL, cookies y elección manual persistente.
+
+Verificación pública adicional: 20 casos distintos de idiomas y muestras
+aprobados (19 en la primera ejecución y el restante tras corregir la simulación
+de cookie compartida del test). La prueba de cambio entre aplicaciones ahora
+reemplaza la cookie real de dominio `.edutictac.es`, sin crear otra homónima
+limitada al host. No se modifica el comportamiento de producción para este ajuste.

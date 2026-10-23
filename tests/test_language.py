@@ -74,7 +74,10 @@ def test_language_change_on_return_preserves_open_book(browser):
     assert next(c['value'] for c in context.cookies() if c['name'] == 'edutictac_language') == 'ca'
     page.click('#new-book'); page.fill('#title', 'Keep my book')
     page.click('#create-form button[type=submit]'); idle(page)
-    context.add_cookies([dict(name='edutictac_language', value='en', url=BASE)])
+    # Production shares this preference across subdomains. Replace the actual
+    # cookie rather than adding a second, host-only cookie with the same name.
+    preference = next(c for c in context.cookies() if c['name'] == 'edutictac_language')
+    context.add_cookies([{**preference, 'value': 'en'}])
     page.evaluate("window.dispatchEvent(new Event('focus'))")
     expect(page.locator('#language')).to_have_value('ca')
     page.click('#back'); idle(page)
