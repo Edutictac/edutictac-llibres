@@ -242,3 +242,34 @@ Còpia anterior de Compose, font pública i línia base en
 `/opt/edutictac-llibres/demo-20261023/`. Per a tornar arrere, restaurar eixe
 Compose i recrear només el servei `llibres`, conservant la font anterior i
 sense tocar SQLite o les dades del navegador. El candidat temporal es retira.
+
+## Mode còmic i exemple — 23-10-2026
+
+Publicats plantilles de 2/3/4 vinyetes, bafarades agrupades i «La granota i la
+idea brillant» en valencià, amb imatges del Rebost i crèdits. L'exemple és estàtic
+i editable des de la portada; no s'ha creat una publicació de prova en el Banc.
+
+Imatge actual:
+`sha256:e9443623d078f28541c3d728cadaa42a3a6a15d64465d832f55b77525e95a26a`.
+La configuració del host, HTTPS i API es mantenen. Només es recrea Llibres;
+identificadors/arrancades dels altres contenidors i PID/arrancada de Play iguals.
+
+Verificació: 78 proves de l'editor en frontal aïllat, més una prova específica
+d'HTML/EPUB; 18 correctes i una omesa (redirecció exclusiva HTTPS) en el candidat
+del VPS; 27 correctes sobre HTTPS públic (còmic, mostres, importació, desfer/refés,
+exportació, Rebost real i permisos anònims). La publicació autenticada es prova
+amb una API temporal i sessions sintètiques, sense comptes ni llibres nous al VPS.
+
+Les 26 omissions de la bateria aïllada corresponen al perfil real del VPS (17)
+i al proxy opcional (9). La ID API del laboratori no exposava les rutes d'Assets
+(404), independentment d'este canvi: no s'ha substituït ni reiniciat. El frontal
+aïllat servix el selector real i les proves controlen la seua API amb fixtures;
+el perfil del VPS comprova després la biblioteca pública real. Una prova antiga
+de crèdits alterava el registre XML global i afectava proves posteriors de SVG;
+ara treballa sobre una còpia restaurada per pytest. No s'ha modificat l'API Banc.
+
+Còpia i resultats privats en `/opt/edutictac-llibres/comic-20261023/`, amb Compose
+i font anteriors. Reversió: restaurar el Compose i font d'eixa còpia i recrear
+solament Llibres, sense restaurar bases de dades. Candidat 18183, túnel SSH i
+contenidor de proves local 18298 retirats. Fonts corresponents incloses al ZIP
+públic. Acceptació amb comptes personals reals pendent com en la fase anterior.

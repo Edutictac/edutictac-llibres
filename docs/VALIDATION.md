@@ -1,5 +1,27 @@
 # Primera versión usable: verificación local
 
+## Mode còmic — 23-10-2026
+
+78 proves correctes en el frontal aïllat, 26 omissions de perfils opcionals;
+exportació específica del còmic a HTML i EPUB correcta. Les comprovacions
+inclouen les tres plantilles, marcs protegits, col·locació a la vinyeta triada,
+text agrupat, edició i desfer/refés, límit de text sense perdre l'esborrany,
+descàrrega/reimportació i publicació amb Rebost i crèdits en API temporal.
+
+El descriptor de grup Fabric admés té proves negatives per a classes,
+estratègies i propietats addicionals no permeses. Els llibres anteriors,
+idiomes, crèdits, estanteria i el circuit de revisió continuen passant.
+La prova antiga de crèdits restaura ara el mapa XML global per a no alterar
+la serialització SVG de les proves de publicació següents.
+
+Candidat VPS: 18 correctes, 1 omesa per ser exclusiva d'HTTPS. Sobre HTTPS
+públic: **27 correctes en 124,95 s**, amb Rebost real i cap compte personal.
+Dos avisos de dependències ja existents en la verificació pública.
+Detalls operatius en [PRODUCTION.md](PRODUCTION.md) i d'ús en
+[COMIC_MODE.md](COMIC_MODE.md). La nova versió està publicada.
+
+## Historial anterior
+
 21-10-2026. Prueba independiente autorizada por el usuario: sin Commons, Rebost
 o autenticación. El manejo desde iPad no es prioritario; se valida en ordenador.
 
