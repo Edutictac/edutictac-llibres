@@ -1,4 +1,4 @@
-const supportedLanguages = ["es", "ca", "va", "en"];
+export const supportedLanguages = ["es", "ca", "va", "en"];
 export function preferredLocale(savedOnly = false) {
   const shared = savedOnly ? window.commonsLanguage?.stored() : window.commonsLanguage?.read();
   if (supportedLanguages.includes(shared)) return shared;

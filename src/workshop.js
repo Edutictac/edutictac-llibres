@@ -5,7 +5,7 @@ import { messages } from "/i18n.js";
 import { inspectBook } from "/import.js";
 import { publicationPackage, coverImage } from "/publication.js";
 
-import { preferredLocale } from "/locale.js";
+import { preferredLocale, supportedLanguages } from "/locale.js";
 
 // Vue receives display state only. eXe instances, DOM and project bytes remain
 // ordinary objects so they can cross the bridge and IndexedDB unchanged.
