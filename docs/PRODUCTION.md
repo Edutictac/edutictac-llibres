@@ -326,3 +326,16 @@ Imatge:
 Candidat privat comprovat abans d’activar. Còpia i reversió en
 `/opt/edutictac-llibres/about-20261023/`. Solament Llibres recreat; altres
 serveis, dades i configuració del host conservats.
+
+## Portada adaptable — 23-10-2026
+
+Canvi d’estils per a evitar el desbordament horitzontal de les mostres en tablet.
+Capçalera, accions, targetes i peu s’adapten a l’amplària disponible; botons de
+les mostres a tot l’ample en mòbil. 32 combinacions locals comprovades (quatre
+idiomes, huit amplàries entre 320 i 1440 px), lector i diàleg de creació inclosos.
+
+Imatge:
+`sha256:5016078496e5db0d5b483ef363879667011b4c3307ede379b8ce20455e3e95fc`.
+Candidat privat comprovat abans d’activar. Còpia i reversió en
+`/opt/edutictac-llibres/responsive-20261023/`. Solament Llibres recreat;
+altres serveis, dades i configuració del host conservats.
