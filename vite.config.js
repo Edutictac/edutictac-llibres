@@ -3,7 +3,11 @@ import vue from "@vitejs/plugin-vue";
 
 // One precompiled application, served by the existing static nginx.
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue({
+      template: { compilerOptions: { isCustomElement: (tag) => tag === "edutictac-account" } },
+    }),
+  ],
   publicDir: false,
   define: {
     "process.env.NODE_ENV": JSON.stringify("production"),

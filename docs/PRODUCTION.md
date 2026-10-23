@@ -339,3 +339,22 @@ Imatge:
 Candidat privat comprovat abans d’activar. Còpia i reversió en
 `/opt/edutictac-llibres/responsive-20261023/`. Solament Llibres recreat;
 altres serveis, dades i configuració del host conservats.
+
+## Xip de compte central — 23-10-2026
+
+La capçalera mostra `<edutictac-account>`, el component Vue de Commons amb la
+sessió, «Inici» i l'eixida. Només s'activa si nginx respon `/account-status`
+(configuracions `nginx.commons.conf` i `nginx.production.conf`); Llibres sense
+Commons no carrega res. Tot va pel mateix origen:
+
+- `/assets/account-widget.{js,css}` ja passa al portal pel proxy de `/assets/`;
+- `GET /api/auth/session` passa al portal sense deixar tornar cap galeta;
+- `POST /api/auth/session/logout` és l'única ruta que pot esborrar galetes;
+- `/commons-home` porta al portal del centre (local) o a `https://edutictac.es/`
+  (producció), i `/teacher.html` al tauler docent de Commons.
+
+El xip no oferix selector de tema (Llibres i eXe conserven el seu) i no recarrega
+la pàgina en eixir. Comprovat en un entorn Docker aïllat amb un portal fals:
+proxies, redireccions, mètodes rebutjats, idioma VA/ES i eixida. Les proves
+d'interfície donen el mateix resultat que abans del canvi (40 correctes; els 5
+errors ja existien i depenen del portal real o de l'idioma de l'entorn).

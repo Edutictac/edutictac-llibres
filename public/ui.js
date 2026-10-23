@@ -4137,10 +4137,10 @@ var Qa = { class: "book-card" }, $a = ["disabled"], eo = ["disabled", "aria-labe
 			Q("button", Vc, I(e.core.t("save")), 1)
 		], 32)], 512));
 	}
-}, Uc = { class: "masthead" }, Wc = ["disabled"], Gc = ["hidden"], Kc = { class: "hero" }, qc = { class: "eyebrow" }, Jc = { class: "intro" }, Yc = { class: "actions" }, Xc = ["hidden"], Zc = ["hidden"], Qc = { class: "storage-note" }, $c = {
+}, Uc = { class: "masthead" }, Wc = ["disabled"], Gc = ["data-lang"], Kc = ["hidden"], qc = { class: "hero" }, Jc = { class: "eyebrow" }, Yc = { class: "intro" }, Xc = { class: "actions" }, Zc = ["hidden"], Qc = ["hidden"], $c = { class: "storage-note" }, el = {
 	class: "hero-art",
 	"aria-hidden": "true"
-}, el = { class: "book-cover" }, tl = { href: "/about.html" }, nl = ["hidden"], rl = ["hidden"], il = { id: "busy-text" }, al = {
+}, tl = { class: "book-cover" }, nl = { href: "/about.html" }, rl = ["hidden"], il = ["hidden"], al = { id: "busy-text" }, ol = {
 	__name: "App",
 	setup(e) {
 		let t = /* @__PURE__ */ H(null), n = /* @__PURE__ */ H(null), r = /* @__PURE__ */ H(null), i = /* @__PURE__ */ H(null), a = /* @__PURE__ */ H(null), o = /* @__PURE__ */ H(null), s = /* @__PURE__ */ H(null), c = /* @__PURE__ */ H(null), l = /* @__PURE__ */ H(null), u = /* @__PURE__ */ H(null), d = /* @__PURE__ */ H(null), f = Za({
@@ -4182,35 +4182,61 @@ var Qa = { class: "book-card" }, $a = ["disabled"], eo = ["disabled", "aria-labe
 			let e = new URL(location.href);
 			e.searchParams.delete("example"), history.replaceState(null, "", e);
 		}
+		let S = /* @__PURE__ */ H(!1);
+		async function C() {
+			try {
+				let e = await fetch("/account-status", { cache: "no-store" });
+				if (!e.ok || (await e.json()).enabled !== !0) return;
+			} catch {
+				return;
+			}
+			if (!document.getElementById("edutictac-account-script")) {
+				let e = document.createElement("link");
+				e.rel = "stylesheet", e.href = "/assets/account-widget.css", document.head.append(e);
+				let t = document.createElement("script");
+				t.id = "edutictac-account-script", t.defer = !0, t.src = "/assets/account-widget.js", document.head.append(t);
+			}
+			S.value = !0;
+		}
 		return $n(async () => {
-			await f.start();
+			C(), await f.start();
 			let e = new URL(location.href).searchParams.get("example");
 			h.includes(e) && await b(e);
 		}), er(f.dispose), (e, h) => (X(), Z(J, null, [
-			Q("header", Uc, [h[14] ||= Q("a", {
-				class: "brand",
-				href: "/"
-			}, [mi("◧ EduTicTac "), Q("b", null, "Llibres")], -1), K(Q("select", {
-				id: "language",
-				"onUpdate:modelValue": h[0] ||= (e) => U(p).locale = e,
-				disabled: U(p).active,
-				onChange: h[1] ||= (e) => U(f).language(U(p).locale),
-				"aria-label": "Idioma"
-			}, [...h[13] ||= [
-				Q("option", { value: "es" }, "Castellano", -1),
-				Q("option", { value: "ca" }, "Català", -1),
-				Q("option", { value: "va" }, "Valencià", -1),
-				Q("option", { value: "en" }, "English", -1)
-			]], 40, Wc), [[La, U(p).locale]])]),
+			Q("header", Uc, [
+				h[14] ||= Q("a", {
+					class: "brand",
+					href: "/"
+				}, [mi("◧ EduTicTac "), Q("b", null, "Llibres")], -1),
+				K(Q("select", {
+					id: "language",
+					"onUpdate:modelValue": h[0] ||= (e) => U(p).locale = e,
+					disabled: U(p).active,
+					onChange: h[1] ||= (e) => U(f).language(U(p).locale),
+					"aria-label": "Idioma"
+				}, [...h[13] ||= [
+					Q("option", { value: "es" }, "Castellano", -1),
+					Q("option", { value: "ca" }, "Català", -1),
+					Q("option", { value: "va" }, "Valencià", -1),
+					Q("option", { value: "en" }, "English", -1)
+				]], 40, Wc), [[La, U(p).locale]]),
+				S.value ? (X(), Z("edutictac-account", {
+					key: 0,
+					id: "accountWidget",
+					"data-home": "/commons-home",
+					"data-lang": U(p).locale,
+					"data-no-reload": ""
+				}, null, 8, Gc)) : hi("", !0)
+			]),
 			Q("main", {
 				id: "home",
 				hidden: U(p).active
 			}, [
-				Q("section", Kc, [Q("div", null, [
-					Q("p", qc, I(U(m)("eyebrow")), 1),
+				Q("section", qc, [Q("div", null, [
+					Q("p", Jc, I(U(m)("eyebrow")), 1),
 					Q("h1", null, I(U(m)("headline")), 1),
-					Q("p", Jc, I(U(m)("intro")), 1),
-					Q("div", Yc, [
+					Q("p", Yc, I(U(m)("intro")), 1),
+					Q("div", Xc, [
 						Q("button", {
 							id: "new-book",
 							onClick: h[2] ||= (e) => r.value.open(),
@@ -4224,15 +4250,15 @@ var Qa = { class: "book-card" }, $a = ["disabled"], eo = ["disabled", "aria-labe
 							id: "open-shared",
 							onClick: h[4] ||= (e) => c.value.open(),
 							hidden: !U(p).publicationEnabled
-						}, I(U(m)("sharedStories")), 9, Xc),
+						}, I(U(m)("sharedStories")), 9, Zc),
 						Q("button", {
 							id: "open-reviews",
 							onClick: h[5] ||= (e) => n.value.open(),
 							hidden: !U(p).publicationEnabled
-						}, I(U(m)("reviewBooks")), 9, Zc)
+						}, I(U(m)("reviewBooks")), 9, Qc)
 					]),
-					Q("p", Qc, I(U(m)("local")), 1)
-				]), Q("div", $c, [Q("div", el, [
+					Q("p", $c, I(U(m)("local")), 1)
+				]), Q("div", el, [Q("div", tl, [
 					Q("span", null, [
 						mi(I(U(m)("coverTop")), 1),
 						h[15] ||= Q("br", null, null, -1),
@@ -4266,8 +4292,8 @@ var Qa = { class: "book-card" }, $a = ["disabled"], eo = ["disabled", "aria-labe
 					"action",
 					"open-book"
 				]),
-				Q("footer", null, [Q("span", null, I(U(m)("footer")), 1), Q("a", tl, I(U(m)("about")), 1)])
-			], 8, Gc),
+				Q("footer", null, [Q("span", null, I(U(m)("footer")), 1), Q("a", nl, I(U(m)("about")), 1)])
+			], 8, Kc),
 			$(Os, {
 				ref_key: "workshop",
 				ref: i,
@@ -4343,17 +4369,17 @@ var Qa = { class: "book-card" }, $a = ["disabled"], eo = ["disabled", "aria-labe
 				"aria-live": "polite",
 				class: Te({ error: U(p).noticeError }),
 				hidden: !U(p).notice
-			}, I(U(p).notice), 11, nl),
+			}, I(U(p).notice), 11, rl),
 			Q("div", {
 				id: "busy",
 				hidden: !U(p).busy,
 				role: "status"
-			}, [h[19] ||= Q("span", { class: "spinner" }, null, -1), Q("span", il, I(U(m)(U(p).busyKey)), 1)], 8, rl)
+			}, [h[19] ||= Q("span", { class: "spinner" }, null, -1), Q("span", al, I(U(m)(U(p).busyKey)), 1)], 8, il)
 		], 64));
 	}
 };
 // src/ui.js
-function ol() {
-	return Ja(al).mount("#app");
+function sl() {
+	return Ja(ol).mount("#app");
 }
-export { ol as mountLlibres };
+export { sl as mountLlibres };

@@ -66,7 +66,32 @@ function closeExample() {
   const url=new URL(location.href);url.searchParams.delete('example');
   history.replaceState(null,'',url);
 }
+// Xip de compte central (<edutictac-account>, component Vue de Commons). Només
+// quan Commons servix Llibres: nginx respon /account-status i fa de proxy de
+// /assets/ i /api/auth/session cap al portal, així que tot és del mateix origen.
+const accountEnabled = ref(false);
+async function mountAccount() {
+  try {
+    const response = await fetch("/account-status", { cache: "no-store" });
+    if (!response.ok || (await response.json()).enabled !== true) return;
+  } catch {
+    return;
+  }
+  if (!document.getElementById("edutictac-account-script")) {
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "/assets/account-widget.css";
+    document.head.append(css);
+    const script = document.createElement("script");
+    script.id = "edutictac-account-script";
+    script.defer = true;
+    script.src = "/assets/account-widget.js";
+    document.head.append(script);
+  }
+  accountEnabled.value = true;
+}
 onMounted(async () => {
+  void mountAccount();
   await core.start();
   const slug=new URL(location.href).searchParams.get('example');
   if (exampleSlugs.includes(slug)) await readExample(slug);
@@ -87,7 +112,15 @@ onUnmounted(core.dispose);
       <option value="ca">Català</option>
       <option value="va">Valencià</option>
       <option value="en">English</option>
-    </select>
+    </select
+    ><!-- data-no-reload: eixir no ha de recarregar un llibre obert. -->
+    <edutictac-account
+      v-if="accountEnabled"
+      id="accountWidget"
+      data-home="/commons-home"
+      :data-lang="state.locale"
+      data-no-reload
+    ></edutictac-account>
   </header>
   <main id="home" :hidden="state.active">
     <section class="hero">
