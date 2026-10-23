@@ -8,3 +8,11 @@ __pycache__
 .pytest_cache
 *.db
 *.sqlite
+
+**/.recall
+
+**/.git
+
+**/.env
+
+**/.env.*
