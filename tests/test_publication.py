@@ -214,6 +214,21 @@ def test_login_returns_to_llibres_and_refreshes_publication_without_opening_rebo
     context.route('http://commons.test/llibres-login.js', lambda route: route.fulfill(
         body=(portal/'llibres-login.js').read_bytes(), content_type='application/javascript'))
     context.route('http://commons.test/styles.css', lambda route: route.fulfill(body='', content_type='text/css'))
+    # The completion page now loads the shared account chip and synchronous
+    # theme bootstrap. Keep its synthetic origin entirely inside this fixture.
+    def portal_asset(route):
+        root = portal.resolve()
+        file = (root / urlsplit(route.request.url).path.lstrip('/')).resolve()
+        if file.is_relative_to(root) and file.is_file():
+            return route.fulfill(body=file.read_bytes(),
+                content_type=mimetypes.guess_type(file)[0] or 'application/octet-stream')
+        return route.fulfill(status=404)
+    context.route('http://commons.test/assets/**', portal_asset)
+    context.route('http://commons.test/api/auth/session?*', lambda route: route.fulfill(json={
+        'authenticated': permission['ready'], 'kind': 'oidc' if permission['ready'] else 'anonymous',
+        'role': 'profesor' if permission['ready'] else None, 'display_name': 'Docent de prova',
+        'login_available': True, 'links': {'teacher': '/teacher.html', 'student': '/student.html',
+            'logout': '/api/auth/session/logout', 'account': None}}))
     page = context.new_page(); create(page, lang)
     page.click('#publish-book'); idle(page)
     expect(page.locator('#publication-login')).to_be_visible()
