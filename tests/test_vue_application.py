@@ -9,7 +9,7 @@ from test_workshop import BASE, browser, idle, choose_language, expect_language_
 @pytest.mark.parametrize(('template', 'pages'), [('album', 3), ('blank', 1)])
 def test_create_templates_page_controls_and_reader_escape(browser, template, pages):
     context = browser.new_context(viewport={'width': 1440, 'height': 1000})
-    page = context.new_page(); page.goto(BASE); choose_language(page, 'va')
+    page = context.new_page(); page.goto(BASE + '?lang=es'); choose_language(page, 'va')
     page.click('#new-book'); expect(page.locator('#title')).to_be_focused()
     page.fill('#title', '   '); page.click('#create-form button[type=submit]')
     expect(page.locator('#create-dialog')).to_be_visible()
