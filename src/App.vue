@@ -182,9 +182,19 @@ onUnmounted(core.dispose);
       :action="core.action"
       :open-book="core.openStored"
     />
-    <footer>
-      <span>{{ t("footer") }}</span
-      ><a href="/about.html">{{ t("about") }}</a>
+    <footer class="ett-footer">
+      <p class="ett-footer__id">
+        <span class="ett-footer__brand">EduTicTac</span>
+        <span aria-hidden="true">·</span>
+        <span class="ett-footer__service">Llibres</span>
+      </p>
+      <div class="ett-footer__links">
+        <a href="https://edutictac.es/">{{ t("footerHome") }}</a>
+        <a href="/about.html">{{ t("about") }}</a>
+        <a href="https://edutictac.es/privacitat.html">{{ t("footerPrivacy") }}</a>
+        <a href="https://git.edutictac.es/Edutictac/edutictac-llibres">{{ t("footerSource") }}</a>
+        <a href="https://git.edutictac.es/Edutictac/edutictac-llibres/src/branch/main/LICENSE">AGPL-3.0</a>
+      </div>
     </footer>
   </main>
 
