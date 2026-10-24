@@ -4140,7 +4140,7 @@ var Qa = { class: "book-card" }, $a = ["disabled"], eo = ["disabled", "aria-labe
 }, Uc = { class: "masthead" }, Wc = ["disabled"], Gc = ["data-lang"], Kc = ["hidden"], qc = { class: "hero" }, Jc = { class: "eyebrow" }, Yc = { class: "intro" }, Xc = { class: "actions" }, Zc = ["hidden"], Qc = ["hidden"], $c = { class: "storage-note" }, el = {
 	class: "hero-art",
 	"aria-hidden": "true"
-}, tl = { class: "book-cover" }, nl = { href: "/about.html" }, rl = ["hidden"], il = ["hidden"], al = { id: "busy-text" }, ol = {
+}, tl = { class: "book-cover" }, nl = { class: "ett-footer" }, rl = { class: "ett-footer__links" }, il = { href: "https://edutictac.es/" }, al = { href: "/about.html" }, ol = { href: "https://edutictac.es/privacitat.html" }, sl = { href: "https://git.edutictac.es/Edutictac/edutictac-llibres" }, cl = ["hidden"], ll = ["hidden"], ul = { id: "busy-text" }, dl = {
 	__name: "App",
 	setup(e) {
 		let t = /* @__PURE__ */ H(null), n = /* @__PURE__ */ H(null), r = /* @__PURE__ */ H(null), i = /* @__PURE__ */ H(null), a = /* @__PURE__ */ H(null), o = /* @__PURE__ */ H(null), s = /* @__PURE__ */ H(null), c = /* @__PURE__ */ H(null), l = /* @__PURE__ */ H(null), u = /* @__PURE__ */ H(null), d = /* @__PURE__ */ H(null), f = Za({
@@ -4306,7 +4306,17 @@ var Qa = { class: "book-card" }, $a = ["disabled"], eo = ["disabled", "aria-labe
 					"action",
 					"open-book"
 				]),
-				Q("footer", null, [Q("span", null, I(U(m)("footer")), 1), Q("a", nl, I(U(m)("about")), 1)])
+				Q("footer", nl, [h[20] ||= Q("p", { class: "ett-footer__id" }, [
+					Q("span", { class: "ett-footer__brand" }, "EduTicTac"),
+					Q("span", { "aria-hidden": "true" }, "·"),
+					Q("span", { class: "ett-footer__service" }, "Llibres")
+				], -1), Q("div", rl, [
+					Q("a", il, I(U(m)("footerHome")), 1),
+					Q("a", al, I(U(m)("about")), 1),
+					Q("a", ol, I(U(m)("footerPrivacy")), 1),
+					Q("a", sl, I(U(m)("footerSource")), 1),
+					h[19] ||= Q("a", { href: "https://git.edutictac.es/Edutictac/edutictac-llibres/src/branch/main/LICENSE" }, "AGPL-3.0", -1)
+				])])
 			], 8, Kc),
 			$(Os, {
 				ref_key: "workshop",
@@ -4383,17 +4393,17 @@ var Qa = { class: "book-card" }, $a = ["disabled"], eo = ["disabled", "aria-labe
 				"aria-live": "polite",
 				class: Te({ error: U(p).noticeError }),
 				hidden: !U(p).notice
-			}, I(U(p).notice), 11, rl),
+			}, I(U(p).notice), 11, cl),
 			Q("div", {
 				id: "busy",
 				hidden: !U(p).busy,
 				role: "status"
-			}, [h[19] ||= Q("span", { class: "spinner" }, null, -1), Q("span", al, I(U(m)(U(p).busyKey)), 1)], 8, il)
+			}, [h[21] ||= Q("span", { class: "spinner" }, null, -1), Q("span", ul, I(U(m)(U(p).busyKey)), 1)], 8, ll)
 		], 64));
 	}
 };
 // src/ui.js
-function sl() {
-	return Ja(ol).mount("#app");
+function fl() {
+	return Ja(dl).mount("#app");
 }
-export { sl as mountLlibres };
+export { fl as mountLlibres };
