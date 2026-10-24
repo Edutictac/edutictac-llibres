@@ -1,5 +1,6 @@
 """Actual nginx permissions; anonymous requests, no accounts or credentials."""
 import json
+import os
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
 
@@ -77,7 +78,7 @@ def test_login_proxy_preserves_requested_destination(destination, endpoint):
     except HTTPError as response:
         assert response.code == 302
         target = urlsplit(response.headers['Location'])
-        assert target.port == 8082
+        assert target.port == int(os.environ.get('LLIBRES_TEST_PORTAL_PORT', '8082'))
         assert target.path == endpoint
         assert parse_qs(target.query)['next'] == [destination]
     else:

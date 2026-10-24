@@ -41,7 +41,7 @@ def queue(browser):
     page = context.new_page()
     state['errors'] = []
     page.on('pageerror', lambda error: state['errors'].append(str(error)))
-    page.goto(BASE)
+    page.goto(BASE + '?lang=es')
     yield page, state
     assert not state['errors']
     context.close()
