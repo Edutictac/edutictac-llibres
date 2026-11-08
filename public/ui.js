@@ -4140,7 +4140,7 @@ var Qa = { class: "book-card" }, $a = ["disabled"], eo = ["disabled", "aria-labe
 }, Uc = { class: "masthead" }, Wc = ["disabled"], Gc = ["data-lang"], Kc = ["hidden"], qc = { class: "hero" }, Jc = { class: "eyebrow" }, Yc = { class: "intro" }, Xc = { class: "actions" }, Zc = ["hidden"], Qc = ["hidden"], $c = { class: "storage-note" }, el = {
 	class: "hero-art",
 	"aria-hidden": "true"
-}, tl = { class: "book-cover" }, nl = { class: "ett-footer" }, rl = { class: "ett-footer__links" }, il = { href: "https://edutictac.es/" }, al = { href: "/about.html" }, ol = { href: "https://edutictac.es/privacitat.html" }, sl = { href: "https://git.edutictac.es/Edutictac/edutictac-llibres" }, cl = ["hidden"], ll = ["hidden"], ul = { id: "busy-text" }, dl = {
+}, tl = { class: "book-cover" }, nl = { class: "ett-footer" }, rl = { class: "ett-footer__links" }, il = { href: "https://edutictac.es/" }, al = { href: "/about.html" }, ol = { href: "https://edutictac.es/privacitat.html" }, sl = { href: "https://edutictac.es/galetes.html" }, cl = { href: "https://git.edutictac.es/Edutictac/edutictac-llibres" }, ll = ["hidden"], ul = ["hidden"], dl = { id: "busy-text" }, fl = {
 	__name: "App",
 	setup(e) {
 		let t = /* @__PURE__ */ H(null), n = /* @__PURE__ */ H(null), r = /* @__PURE__ */ H(null), i = /* @__PURE__ */ H(null), a = /* @__PURE__ */ H(null), o = /* @__PURE__ */ H(null), s = /* @__PURE__ */ H(null), c = /* @__PURE__ */ H(null), l = /* @__PURE__ */ H(null), u = /* @__PURE__ */ H(null), d = /* @__PURE__ */ H(null), f = Za({
@@ -4314,7 +4314,8 @@ var Qa = { class: "book-card" }, $a = ["disabled"], eo = ["disabled", "aria-labe
 					Q("a", il, I(U(m)("footerHome")), 1),
 					Q("a", al, I(U(m)("about")), 1),
 					Q("a", ol, I(U(m)("footerPrivacy")), 1),
-					Q("a", sl, I(U(m)("footerSource")), 1),
+					Q("a", sl, I(U(m)("footerCookies")), 1),
+					Q("a", cl, I(U(m)("footerSource")), 1),
 					h[19] ||= Q("a", { href: "https://git.edutictac.es/Edutictac/edutictac-llibres/src/branch/main/LICENSE" }, "AGPL-3.0", -1)
 				])])
 			], 8, Kc),
@@ -4393,17 +4394,17 @@ var Qa = { class: "book-card" }, $a = ["disabled"], eo = ["disabled", "aria-labe
 				"aria-live": "polite",
 				class: Te({ error: U(p).noticeError }),
 				hidden: !U(p).notice
-			}, I(U(p).notice), 11, cl),
+			}, I(U(p).notice), 11, ll),
 			Q("div", {
 				id: "busy",
 				hidden: !U(p).busy,
 				role: "status"
-			}, [h[21] ||= Q("span", { class: "spinner" }, null, -1), Q("span", ul, I(U(m)(U(p).busyKey)), 1)], 8, ll)
+			}, [h[21] ||= Q("span", { class: "spinner" }, null, -1), Q("span", dl, I(U(m)(U(p).busyKey)), 1)], 8, ul)
 		], 64));
 	}
 };
 // src/ui.js
-function fl() {
-	return Ja(dl).mount("#app");
+function pl() {
+	return Ja(fl).mount("#app");
 }
-export { fl as mountLlibres };
+export { pl as mountLlibres };

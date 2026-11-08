@@ -192,6 +192,7 @@ onUnmounted(core.dispose);
         <a href="https://edutictac.es/">{{ t("footerHome") }}</a>
         <a href="/about.html">{{ t("about") }}</a>
         <a href="https://edutictac.es/privacitat.html">{{ t("footerPrivacy") }}</a>
+        <a href="https://edutictac.es/galetes.html">{{ t("footerCookies") }}</a>
         <a href="https://git.edutictac.es/Edutictac/edutictac-llibres">{{ t("footerSource") }}</a>
         <a href="https://git.edutictac.es/Edutictac/edutictac-llibres/src/branch/main/LICENSE">AGPL-3.0</a>
       </div>
