@@ -25,9 +25,10 @@ const codeFor = status => status === 401 ? 'session' : status === 404 ? 'not_fou
  */
 export class RebostClient {
   constructor({endpoint = '/api/assets/v1', allowedOrigins = [], fetch: fetchImpl} = {}) {
-    const base = typeof location === 'undefined' ? undefined : location.href;
-    const url = new URL(endpoint, base);
-    const same = typeof location !== 'undefined' && url.origin === location.origin;
+    const hasLocation = typeof location !== 'undefined' && /^https?:/.test(location.href ?? '');
+    // Sin `location` (Node, pruebas) solo se admiten rutas relativas, que cuentan como mismo origen.
+    const url = hasLocation ? new URL(endpoint, location.href) : new URL(endpoint, 'http://same-origin.invalid');
+    const same = hasLocation ? url.origin === location.origin : url.origin === 'http://same-origin.invalid';
     if (url.search || url.hash) throw new RebostError('invalid_endpoint');
     if (!same && !allowedOrigins.includes(url.origin)) throw new RebostError('same_origin_required');
     this.endpoint = same ? url.pathname.replace(/\/$/, '') : url.origin + url.pathname.replace(/\/$/, '');
@@ -44,7 +45,7 @@ export class RebostClient {
       throw new RebostError('network', 0, String(cause?.message ?? cause));
     }
     if (!response.ok) {
-      const body = await response.json().catch(() => ({}));
+      const body = await Promise.resolve(response.json?.()).catch(() => null) ?? {};
       throw new RebostError(codeFor(response.status), response.status, typeof body.detail === 'string' ? body.detail : '');
     }
     return response;
@@ -75,7 +76,7 @@ export class RebostClient {
   /** Blob con límite de tamaño aunque no haya Content-Length. */
   async blob(path, limit) {
     const response = await this.request(path);
-    const declared = Number(response.headers.get('content-length'));
+    const declared = Number(response.headers?.get?.('content-length'));
     if (declared > limit) throw new RebostError('too_large');
     const reader = response.body?.getReader?.();
     if (!reader) {
@@ -95,7 +96,7 @@ export class RebostClient {
       }
     } finally { await reader.cancel().catch(() => {}); }
     if (!size) throw new RebostError('invalid');
-    return new Blob(chunks, {type: response.headers.get('content-type') || ''});
+    return new Blob(chunks, {type: response.headers?.get?.('content-type') || ''});
   }
 
   async content(id) { return this.blob(RebostClient.itemPath(id) + '/content', LIMITS.image); }
@@ -136,14 +137,16 @@ const PNG = [137, 80, 78, 71, 13, 10, 26, 10];
  * @param {{types?:string[], locale?:string, changes?:string}} [options]
  * @returns {Promise<{item:object, name:string, blob:Blob, credit:object|null}>}
  */
-export async function fetchSelection(client, id, {types, locale = 'ca', changes = 'Imported as normalized PNG; may be edited.'} = {}) {
+export async function fetchSelection(client, id, {types, locale = 'ca', changes = 'Imported as normalized PNG; may be edited.', verifyPng = true} = {}) {
   const item = await client.item(id);
   if (item.id !== id || !Number.isSafeInteger(item.revision) || item.revision < 1) throw new RebostError('invalid');
   if (types && !types.includes(item.type)) throw new RebostError('invalid');
   const blob = await client.content(id);
-  if (blob.type.split(';')[0] !== 'image/png') throw new RebostError('invalid');
-  const head = new Uint8Array(await blob.slice(0, 8).arrayBuffer());
-  if (PNG.some((b, i) => head[i] !== b)) throw new RebostError('invalid');
+  if (verifyPng) {
+    if (String(blob.type).split(';')[0] !== 'image/png') throw new RebostError('invalid');
+    const head = new Uint8Array(await blob.slice(0, 8).arrayBuffer());
+    if (PNG.some((b, i) => head[i] !== b)) throw new RebostError('invalid');
+  }
   const key = locale === 'va' ? 'ca' : locale;
   const name = String(item.names?.[key] || item.name || 'Rebost').slice(0, 200);
   const origin = ['catalog', 'scratch'].includes(item.collection) ? item : item.provenance;
