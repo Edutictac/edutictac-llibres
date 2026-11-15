@@ -6,7 +6,7 @@ export const CREDIT_KEYS = ['source_id', 'source_revision', 'source_path', 'sour
 
 export class RebostError extends Error {
   constructor(code, status = 0, detail = '') {
-    super(code);
+    super(detail || code); // `message` = código de detalle del servidor si lo hay (lo usan las interfaces para traducir)
     this.code = code; // session | not_found | conflict | too_large | invalid | network | operation_failed
     this.status = status;
     this.detail = detail;
@@ -99,7 +99,7 @@ export class RebostClient {
     return new Blob(chunks, {type: response.headers?.get?.('content-type') || ''});
   }
 
-  async content(id) { return this.blob(RebostClient.itemPath(id) + '/content', LIMITS.image); }
+  async content(id, limit = LIMITS.image) { return this.blob(RebostClient.itemPath(id) + '/content', limit); }
   async thumbnail(id) { return this.blob(RebostClient.itemPath(id) + '/thumbnail', LIMITS.image); }
   contentUrl(id) { return this.endpoint + RebostClient.itemPath(id) + '/content'; }
   thumbnailUrl(id) { return this.endpoint + RebostClient.itemPath(id) + '/thumbnail'; }
@@ -107,7 +107,7 @@ export class RebostClient {
 
   /** Guarda un Blob/File en la biblioteca personal. */
   async add(file, {name, type, credit = '', license = ''}) {
-    if (!file.size || file.size > LIMITS.image) throw new RebostError('too_large');
+    if (!file.size || file.size > LIMITS.image) throw new RebostError('too_large', 413, 'image_limit');
     const headers = {'Content-Type': file.type || 'image/png', 'X-Rebost-Name': encodeURIComponent(String(name).slice(0, 200)),
       'X-Rebost-Type': type};
     if (credit) headers['X-Rebost-Credit'] = encodeURIComponent(credit.slice(0, 300));
