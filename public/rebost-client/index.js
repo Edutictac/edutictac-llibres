@@ -119,15 +119,33 @@ export class RebostClient {
   contentUrl(id) { return this.endpoint + RebostClient.itemPath(id) + '/content'; }
   thumbnailUrl(id) { return this.endpoint + RebostClient.itemPath(id) + '/thumbnail'; }
   async text(id, kind, limit) { return (await this.blob(RebostClient.itemPath(id) + '/' + kind, limit)).text(); }
+  /** Texto de `source` o `license` leído de una vez (límite de caracteres). */
+  async readText(id, kind, limit) {
+    const text = await (await this.request(RebostClient.itemPath(id) + '/' + kind)).text();
+    if (text.length > limit) throw new RebostError('too_large');
+    return text;
+  }
 
   /** Guarda un Blob/File en la biblioteca personal. */
-  async add(file, {name, type, credit = '', license = ''}) {
+  /**
+   * @param {Blob} file
+   * @param {{name:string,type:string,credit?:string,license?:string,derivedFrom?:{id:string,revision:number}}} meta
+   *   `derivedFrom`: el original autorizado por el servidor (catálogo o Scratch) del que deriva la imagen; envía
+   *   `X-Rebost-Source` e `If-Match` para que el servidor conserve el crédito del original.
+   */
+  async add(file, {name, type, credit = '', license = '', derivedFrom = null}) {
     const sound = type === 'sound';
     if (!file.size || file.size > (sound ? LIMITS.sound : LIMITS.image)) throw new RebostError('too_large', 413, sound ? 'sound_limit' : 'image_limit');
     const headers = {'Content-Type': file.type || (sound ? 'audio/ogg' : 'image/png'), 'X-Rebost-Name': encodeURIComponent(String(name).slice(0, 200)),
       'X-Rebost-Type': type};
     if (credit) headers['X-Rebost-Credit'] = encodeURIComponent(credit.slice(0, 300));
     if (license) headers['X-Rebost-License'] = encodeURIComponent(license.slice(0, 100));
+    if (derivedFrom) {
+      RebostClient.itemPath(derivedFrom.id);
+      if (!Number.isSafeInteger(derivedFrom.revision) || derivedFrom.revision < 1) throw new RebostError('invalid');
+      headers['X-Rebost-Source'] = derivedFrom.id;
+      headers['If-Match'] = `"${derivedFrom.revision}"`;
+    }
     return this.json('/items', {method: 'POST', body: file, headers});
   }
   update(item, {name, type}) {
