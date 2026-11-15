@@ -1,1 +1,1 @@
-// copiado de @edutictac/rebost-client 152a39a; no editar aquí
+// copiado de @edutictac/rebost-client ad4f585; no editar aquí
