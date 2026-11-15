@@ -9,14 +9,34 @@ export function newRequestId() {
   return Array.from(globalThis.crypto.getRandomValues(new Uint32Array(4)), n => n.toString(16)).join('-');
 }
 
-/** URL del selector para un iframe. `base` por defecto: '/assets/'. */
-export function pickerUrl({base = '/assets/', type, request, lang} = {}) {
+/**
+ * URL del selector para un iframe. `base` por defecto: '/assets/'.
+ * Parámetros: mode=pick, type (sprite|background), request, lang (es|ca|va|en),
+ * collection (mine|catalog|scratch), y para personajes con varias poses supports_families=1&selection=sprite.
+ */
+export function pickerUrl({base = '/assets/', type, request, lang, collection, families = false} = {}) {
   const url = new URL(base, globalThis.location?.href);
   url.searchParams.set('mode', 'pick');
   if (type) url.searchParams.set('type', type);
   url.searchParams.set('request', request);
   if (lang) url.searchParams.set('lang', lang);
+  if (collection) url.searchParams.set('collection', collection);
+  if (families) { url.searchParams.set('supports_families', '1'); url.searchParams.set('selection', 'sprite'); }
   return url.pathname + url.search;
+}
+
+/** Mensaje que envía el selector al elegir una imagen (versión 1). `family` = elegir la familia entera. */
+export function selectionMessage({request, id, name, family}) {
+  return {format: SELECTION_FORMAT, version: SELECTION_VERSION, request: request || '', id, ...(name === undefined ? {} : {name}),
+    ...(family ? {family: true, familyRevision: family.revision} : {})};
+}
+
+/** Mensaje de cancelación (p. ej. tecla Escape). */
+export const cancelMessage = request => ({format: SELECTION_FORMAT, version: SELECTION_VERSION, request: request || '', cancel: true});
+
+/** Envía un mensaje al padre solo a su mismo origen. */
+export function postToParent(message, {parent = globalThis.parent, origin = globalThis.location.origin} = {}) {
+  parent.postMessage(message, origin);
 }
 
 /**
